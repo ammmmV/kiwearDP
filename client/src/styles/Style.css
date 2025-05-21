@@ -1,0 +1,233 @@
+.auth-card {
+    position: relative;
+    padding: 5px;
+    background: linear-gradient(135deg, #267b54, #43d08e);
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.auth-card-content input::placeholder {
+    color: #dcdcdc !important;
+}
+
+.auth-card-content {
+    /* background: #333538; */
+    background: #27282a;
+    color: #f7f7f7;
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.auth-button {
+    background: linear-gradient(135deg, #267b54, #43d08e);
+    border: none;
+    color: #f7f7f7;
+    padding: 8px 15px;
+    border-radius: 8px;
+    transition: 0.3s ease-in-out;
+}
+
+.auth-button:hover {
+    background: linear-gradient(135deg, #267b54, #43d08e);
+    transform: scale(1.05);
+}
+
+
+.custom-active.active,
+.custom-active:hover,
+.page-item .page-link:hover {
+    background-color: #267b53;
+    color: #000;
+    border-color: #000000;
+}
+
+.custom-active-type.active {
+    background-color: #267b53;
+    color: #000;
+    border: none;
+}
+
+.custom-active-type:hover {
+    background-color: #e4e4e4;
+    color: #000;
+    border: none;
+}
+
+.pagination-item {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 5px;
+    border: none;
+    cursor: pointer;
+}
+
+.page-item .page-link {
+    border: 1px solid #e0e0e0;
+    /* background-color: #ffffff2d; */
+    background-color: #ffffff2d;
+    color: black;
+    margin: 0;
+}
+
+.page-item .page-link .custom-active.active {
+    background-color: #43d08ea0;
+    border-radius: 10%;
+}
+
+.d-flex {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.custom-pattern {
+    width: 166px;
+    cursor: pointer;
+    padding: 5px 8px 5px 8px;
+    border: 1px solid #e0e0e0;
+}
+
+.custom-pattern:hover {
+    border: 1px solid #198754;
+}
+
+
+.btn-remove {
+    max-width: 40px;
+    width: 40px;
+    background-color: transparent !important;
+    border: none !important;
+}
+
+.userLine {
+    cursor: pointer;
+    position: relative;
+}
+
+.hidden {
+    display: none;
+}
+
+.userLine:hover .hover-image-btn {
+    background-color: transparent;
+    display: inline-block;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+.custom-table {
+    max-width: 1000px;
+    font-size: 1.2em;
+    border: 2px solid #198754;
+    border-collapse: separate;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.custom-table th,
+.custom-table td {
+    border: none;
+    border-collapse: collapse;
+    padding: 10px;
+    vertical-align: middle;
+    /* background: #333538; */
+    background: none;
+    color: #f7f7f7;
+}
+
+.custom-table th {
+    background-color: none;
+}
+
+.kiwi-background {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    background-image: url('../assets/kiwi-bird.svg');
+    background-size: 200px 200px;
+    width: 180px;
+    height: 150px;
+    background-repeat: no-repeat;
+    transform: rotate(45deg);
+}
+
+.butt_edit {
+    background-color: transparent;
+    display: inline-block;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+/*menu animation*/
+
+.menuShow {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 998;
+
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-20px);
+    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+}
+
+.menuShow.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.menuShow ul {
+    list-style: none;
+    margin-top: 60px;
+    margin-left: 20px;
+    font-size: 2em;
+}
+
+.menuShow li, a{
+    font-size: 20px;
+    color: #c4c4c4;
+    text-decoration: none;
+}
+.menuShow a:hover{
+    color: #ffffff;
+}
+
+
+/*profile-data*/
+.profile-card {
+    width: 80%;
+    min-height: 80vh;
+    font-size: 1.2em;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    align-items: center;
+    max-width: 900px;
+}
+
+.profile-card input,
+.profile-card select {
+  width: 100%;
+  min-width: 350px;
+}
+
+.conainer-basket {
+    width: 450px;
+    border: solid 1px #198754;
+    border-radius: 20px;
+}

@@ -1,0 +1,14 @@
+body{
+    /* background-image: url('../assets/bg.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center; */
+    
+    background-color: #27282a;
+    width: 100vw;
+    height: 100vh;
+    
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}

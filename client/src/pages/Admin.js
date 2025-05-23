@@ -12,7 +12,7 @@ const Admin = () => {
     const [patternVisible, setPatternVisible] = useState(false)
 
     return (
-        <Container className="d-flex flex-column">
+        <Container style={{display: "flex", flexDirection: "column"}}>
             <Button
                 variant="outline-light"
                 className="mt-3 p-2"

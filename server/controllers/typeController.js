@@ -7,9 +7,6 @@ class TypeController {
     async create(req, res, next) {
         try {
             const {name} = req.body
-            // const {img} = req.files
-            // let fileName = uuid.v4() + ".jpg"
-            // img.mv(path.resolve(__dirname, '..', 'static', fileName))
             const type = await Type.create({name})
             return res.json(type)
         } catch (e) {

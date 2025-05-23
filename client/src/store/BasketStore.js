@@ -13,7 +13,7 @@ export default class BasketStore {
 
     setCurrentUserEmail(email) {
         this.currentUserEmail = email;
-        this.loadUserBasket();
+        this.fetchBasket(); // Заменяем loadUserBasket на fetchBasket
     }
 
     setBasket(basket) {
@@ -44,40 +44,36 @@ export default class BasketStore {
         }
     }
 
-    async addToBasket(pattern) {
+    async addToBasket(data) {
         try {
             this.setLoading(true);
     
-            if (!pattern || !pattern.id) {
+            if (!data || !data.patternId) {
                 throw new Error('Не указан паттерн');
             }
     
-            const item = {
-                patternId: pattern.id,
-                // name: pattern.name,
-                // price: pattern.price,
-                // img: pattern.img,
-                quantity: 1
-            };
-    
-            const existingItemIndex = this._basket.findIndex(
-                i => i.patternId === item.patternId &&
-                     i.name === item.name
-            );
-    
-            if (existingItemIndex !== -1) {
-                const updatedBasket = [...this._basket];
-                updatedBasket[existingItemIndex].quantity += 1;
-                this.setBasket(updatedBasket);
-            } else {
-                this.setBasket([...this._basket, item]);
+            if (!localStorage.getItem('token')) {
+                alert('АВТОРИЗУЙСЯ');
+                return;
             }
     
-            if (localStorage.getItem('token')) {
-                try {
-                    await $authHost.post('api/basket', item);
-                } catch (e) {
-                    console.error('Ошибка при синхронизации с сервером:', e.response?.data || e.message);
+            console.log('Token:', localStorage.getItem('token'));
+            const response = await $authHost.post('api/basket', {
+                patternId: data.patternId
+            });
+    
+            if (response.data) {
+                const newItem = response.data;
+                const existingItemIndex = this._basket.findIndex(
+                    i => i.patternId === newItem.patternId
+                );
+    
+                if (existingItemIndex !== -1) {
+                    const updatedBasket = [...this._basket];
+                    updatedBasket[existingItemIndex].quantity = newItem.quantity;
+                    this.setBasket(updatedBasket);
+                } else {
+                    this.setBasket([...this._basket, newItem]);
                 }
             }
         } catch (e) {
@@ -137,7 +133,10 @@ export default class BasketStore {
     }
 
     get totalPrice() {
-        return this._basket.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        return this._basket.reduce((sum, item) => {
+            const price = item.pattern ? parseFloat(item.pattern.price) : 0;
+            return sum + (price * item.quantity);
+        }, 0);
     }
 
     get itemCount() {
@@ -175,12 +174,15 @@ export default class BasketStore {
     async fetchBasket() {
         try {
             this.setLoading(true);
-            const { data } = await $authHost.get('api/basket');
-            if (data && Array.isArray(data.basket_items)) {
-                this.setBasket(data.basket_items);
+            if (!localStorage.getItem('token')) {
+                return;
+            }
+            const response = await $authHost.get('api/basket');
+            if (response.data) {
+                this.setBasket(response.data);
             }
         } catch (e) {
-            console.error('Ошибка при получении корзины:', e);
+            console.error('Ошибка при получении корзины:', e.message);
         } finally {
             this.setLoading(false);
         }

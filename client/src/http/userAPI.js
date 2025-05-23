@@ -60,4 +60,3 @@ export const updateUser = async (userData) => {
     const { data } = await $authHost.put('api/user/update', userData);
     return data;
 }
-

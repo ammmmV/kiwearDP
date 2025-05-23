@@ -18,7 +18,8 @@ const Basket = sequelize.define('basket', {
 const BasketItem = sequelize.define('basket_item', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     quantity: { type: DataTypes.INTEGER, defaultValue: 1 },
-    patternId: { type: DataTypes.INTEGER, allowNull: false },
+    basketId: { type: DataTypes.INTEGER, allowNull: false },
+    patternId: { type: DataTypes.INTEGER, allowNull: false }
 });
 
 // const BasketPattern = sequelize.define('basket_pattern', {
@@ -75,36 +76,19 @@ Review.belongsTo(User);
 Pattern.hasMany(Review);
 Review.belongsTo(Pattern);
 
-// Fabric.hasMany(Review)
-// Review.belongsTo(Fabric)
-
-// Type.hasMany(Review)
-// Review.belongsTo(Type)
-
 User.hasOne(Basket)
 Basket.belongsTo(User)
 
-// Связи товаров с корзиной
-Basket.belongsToMany(Pattern, { through: 'BasketPattern' });
-Pattern.belongsToMany(Basket, { through: 'BasketPattern' });
+Basket.hasMany(BasketItem);
+BasketItem.belongsTo(Basket);
+BasketItem.belongsTo(Pattern);
 
-// Basket.belongsToMany(Fabric, { through: 'BasketFabric' });
-// Fabric.belongsToMany(Basket, { through: 'BasketFabric' });
+// Basket.belongsToMany(Pattern, { through: 'BasketPattern' });
+// Pattern.belongsToMany(Basket, { through: 'BasketPattern' });
 
-// Basket.belongsToMany(Type, { through: 'BasketType' });
-// Type.belongsToMany(Basket, { through: 'BasketType' });
-
-// Связь заказа с товарами через промежуточные таблицы
 Order.belongsToMany(Pattern, {through: 'OrderPattern'})
 Pattern.belongsToMany(Order, {through: 'OrderPattern'})
 
-// Order.belongsToMany(Fabric, {through: 'OrderFabric'})
-// Fabric.belongsToMany(Order, {through: 'OrderFabric'})
-
-// Order.belongsToMany(Type, {through: 'OrderAccessory'})
-// Type.belongsToMany(Order, {through: 'OrderAccessory'})
-
-// Связи между лекалами, тканями и фурнитурой
 Fabric.hasMany(Pattern)
 Pattern.belongsTo(Fabric)
 

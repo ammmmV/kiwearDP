@@ -68,3 +68,13 @@ export const updatePattern = async (patternId, updatedData) => {
         throw error;
     }
 };
+
+export const addBasketItem = async (basket) => {
+    const { data } = await $authHost.post('api/basket', basket)
+    return data
+};
+
+export const removeFromBasket = async (id) => {
+    const { data } = await $authHost.post('api/basket', id)
+    return data
+};

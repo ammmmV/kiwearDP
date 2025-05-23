@@ -1,30 +1,3 @@
-// import React, { useContext } from 'react';
-// import { observer } from "mobx-react-lite";
-// import { Context } from "../index";
-// import "../styles/Style.css"
-// import Col from "react-bootstrap/Col";
-// import ListGroup from "react-bootstrap/ListGroup";
-
-// const TypeBar = observer(() => {
-//     const { pattern } = useContext(Context)
-//     return (
-//         <ListGroup>
-//             {pattern.types.map(type =>
-//                 <ListGroup.Item
-//                     style={{ cursor: 'pointer' }}
-//                     className={`custom-active ${type.id === pattern.selectedType.id ? 'active' : ''}`}
-//                     onClick={() => pattern.setSelectedType(type)}
-//                     key={type.id}
-//                 >
-//                     {type.name}
-//                 </ListGroup.Item>
-//             )}
-//         </ListGroup>
-
-//     );
-// });
-
-// export default TypeBar;
 
 import React, { useContext } from 'react';
 import { ListGroup, Button } from "react-bootstrap";

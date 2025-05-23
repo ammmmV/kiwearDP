@@ -9,9 +9,6 @@ class FabricController {
         try {
 
             let { name } = req.body
-            // const { img } = req.files
-            // let fileName = uuid.v4() + ".jpg"
-            // img.mv(path.resolve(__dirname, '..', 'static', fileName))
             const fabric = await Fabric.create({ name });
 
             return res.json(fabric)

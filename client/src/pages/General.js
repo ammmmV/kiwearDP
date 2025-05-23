@@ -3,8 +3,8 @@ import { Container } from "react-bootstrap";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import TypeBar from "../components/TypeBar";
-import FabricBar from '../components/FabricBar';
-import PatternList from "../components/PatternList";
+// import FabricBar from '../components/FabricBar';
+// import PatternList from "../components/PatternList";
 import { observer } from "mobx-react-lite";
 // import { Context } from "../index";
 // import { fetchFabrics, fetchPatterns, fetchTypes } from "../http/patternAPI";
@@ -20,7 +20,7 @@ const General = observer(() => {
                     <TypeBar />
                 </Col>
                 <Col md={9}>
-                    <PatternList />
+                    {/* <PatternList /> */}
                     <Pages />
                 </Col>
             </Row>

@@ -36,27 +36,25 @@ const ItemModal = ({ show, onHide, item, type }) => {
     if (user.currentUser?.email) {
       basket.setUser(user.currentUser.email);
     }
-    fetchPattern(id).then(data => setPattern(data));
+    // fetchPattern(id).then(data => setPattern(data));
   }, [user.currentUser?.email, basket]);
 
   const addToBasket = async () => {
     try {
-      const itemToAdd = {
-        id: item.id,
-        // name: item.name,
-        // price: item.price,
-        // img: item.img,
-        quantity: 1,
-      };
+        if (!user.isAuth) {
+            alert("АВТОРИЗУЙСЯ");
+            return;
+        }
 
-      await basket.addToBasket(itemToAdd);
-      onHide();
-      // alert("Товар успешно добавлен в корзину!");
+        await basket.addToBasket({
+            patternId: item.id
+        });
+        onHide();
     } catch (error) {
-      console.error("Ошибка при добавлении в корзину:", error);
-      alert("Произошла ошибка при добавлении товара в корзину");
+        console.error("Ошибка при добавлении в корзину:", error);
+        alert("Произошла ошибка при добавлении товара в корзину");
     }
-  };
+};
 
   return (
     <StyledModal show={show} onHide={onHide} size="lg" centered>

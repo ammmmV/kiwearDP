@@ -77,14 +77,14 @@ const NavBar = observer(() => {
       show: user.isAuth && user.user.role === 'ADMIN',
     },
     {
-      label: "Лекала",
-      href: PATTERNS_FIX_ROUTE,
-      show: user.isAuth && user.user.role === 'ADMIN',
-    },
-    {
       label: "Корзина",
       href: BASKET_ROUTE,
       show: user.isAuth,
+    },
+    {
+      label: "Лекала",
+      href: PATTERNS_FIX_ROUTE,
+      show: user.isAuth && user.user.role === 'ADMIN',
     },
   ];
 
@@ -147,7 +147,7 @@ const NavBar = observer(() => {
                   }}
                   style={menuItemStyle(PATTERNS_ROUTE)}
                 >
-                  нет
+                  Лекала
                 </a>
               </li>
             </ul>
@@ -174,7 +174,7 @@ const NavBar = observer(() => {
                   onClick={() => history(BASKET_ROUTE)}
                   style={menuItemStyle(BASKET_ROUTE)}
                 >
-                  что-то
+                  Отзывы
                 </a>
               </li>
             </ul>

@@ -3,8 +3,7 @@ import { Container, Row, Col } from "react-bootstrap";
 import { observer } from "mobx-react-lite";
 import { Context } from "../index";
 import { fetchPatterns } from "../http/patternAPI";
-import PatternList from "../components/PatternList";
-import Pages from "../components/Pages";
+// import PatternList from "../components/PatternList";
 import styled from 'styled-components';
 
 const StyledContainer = styled(Container)`
@@ -145,7 +144,7 @@ const Patterns = observer(() => {
             </PatternHeader>
             <Row>
                 <Col md={12}>
-                    <PatternList />
+                    {/* <PatternList /> */}
                 </Col>
             </Row>
         </StyledContainer>

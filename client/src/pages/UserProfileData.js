@@ -7,13 +7,13 @@ import { updateUser } from "../http/userAPI";
 import { Context } from "../index";
 import { useNavigate } from "react-router-dom";
 import { LOGIN_ROUTE } from "../utils/consts";
-import mouse from '../assets/mouse.png'
+import mouse from '../assets/mouse.png';
 import "../styles/Style.css";
-
-const mockComments = [];
+import { createReview } from '../http/reviewAPI';
+import ReviewStore from '../store/ReviewStore';
 
 const UserProfile = observer(() => {
-    const { user } = useContext(Context);
+    const { user, order } = useContext(Context);
     const navigate = useNavigate();
 
     const [email, setEmail] = useState('');
@@ -22,18 +22,36 @@ const UserProfile = observer(() => {
     const [name, setName] = useState('');
     const [isEditing, setIsEditing] = useState(false);
     const [comments, setComments] = useState([]);
-
+    const [orderedPatterns, setOrderedPatterns] = useState([]);
+    const [selectedPatternId, setSelectedPatternId] = useState("");
+    const [rating, setRating] = useState(0);
+    const [comment, setComment] = useState("");
+    
     useEffect(() => {
         if (user && user.user) {
-            console.log('User data:', user.user);
-            console.log('User type:', typeof user.user);
             setEmail(user.user.email || '');
             setPhone(user.user.phone || '');
             setSize(user.user.size || '');
             setName(user.user.name || '');
         }
-        setComments(mockComments);
-    }, [user.user]);
+    
+        const fetchOrderedPatterns = async () => {
+            try {
+                await order.fetchOrders(); // Ждём загрузки
+                const allPatterns = order.orders.flatMap(o => o.patterns || []);
+                const uniquePatterns = Array.from(new Map(allPatterns.map(p => [p.id, p])).values());
+                setOrderedPatterns(uniquePatterns);
+            } catch (e) {
+                console.error("Ошибка при получении заказов:", e);
+                setOrderedPatterns([]);
+            }
+        };
+    
+        fetchOrderedPatterns();
+    
+        setComments([]);
+    }, [user.user, order]);
+    
 
     const handleLogout = () => {
         user.setUser({});
@@ -50,24 +68,37 @@ const UserProfile = observer(() => {
                 phone,
                 size
             };
-
             const updatedUser = await updateUser(updatedData);
-            
             user.setUser({
                 ...user.user,
                 ...updatedData
             });
-            
             setEmail(updatedData.email);
             setPhone(updatedData.phone);
             setSize(updatedData.size);
             setName(updatedData.name);
-            
             setIsEditing(false);
             alert('Данные успешно обновлены!');
         } catch (error) {
             console.error('Ошибка при сохранении данных:', error);
             alert('Произошла ошибка при сохранении данных');
+        }
+    };
+
+    const handleReviewSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            await ReviewStore.addReview({
+                patternId: selectedPatternId,
+                rating,
+                comment
+            });
+            // Сброс формы после успешной отправки
+            setSelectedPatternId("");
+            setRating(0);
+            setComment("");
+        } catch (error) {
+            console.error("Ошибка при отправке отзыва:", error);
         }
     };
 
@@ -92,7 +123,6 @@ const UserProfile = observer(() => {
                             disabled={!isEditing}
                             style={{ background: "#27282a", color: "#f7f7f7" }}
                         />
-
                         <Form.Label style={{ color: "#f7f7f7" }}>Телефон:</Form.Label>
                         <InputMask
                             mask="+375 (99) 999-99-99"
@@ -109,7 +139,6 @@ const UserProfile = observer(() => {
                                 />
                             )}
                         </InputMask>
-
                         <Form.Label style={{ color: "#f7f7f7" }}>Размер одежды:</Form.Label>
                         <Form.Select
                             className="mb-4 border-secondary"
@@ -125,7 +154,6 @@ const UserProfile = observer(() => {
                             <option value="L">L (48)</option>
                             <option value="XL">XL (50)</option>
                         </Form.Select>
-
                         <div className="d-flex justify-content-between mb-4">
                             <Button variant="outline-light" onClick={handleLogout}>Выйти</Button>
                             {isEditing ? (
@@ -133,27 +161,48 @@ const UserProfile = observer(() => {
                             ) : (
                                 <Button className="auth-button" onClick={() => setIsEditing(true)}>Редактировать</Button>
                             )}
-
                         </div>
                     </Form>
 
+                    {/* Форма для нового отзыва */}
+                    <Form onSubmit={handleReviewSubmit} className="mb-4">
+                        <Form.Label style={{ color: "#f7f7f7" }}>Выберите товар:</Form.Label>
+                        <Form.Select name="patternId" required style={{ background: "#27282a", color: "#f7f7f7" }}>
+                            <option value="">Выберите товар</option>
+                            {orderedPatterns.map((pattern) => (
+                                <option key={pattern.id} value={pattern.id}>{pattern.name}</option>
+                            ))}
+                        </Form.Select>
+                        <Form.Label style={{ color: "#f7f7f7", marginTop: "1rem" }}>Оценка:</Form.Label>
+                        <Form.Select name="rating" required style={{ background: "#27282a", color: "#f7f7f7" }}>
+                            <option value="">Оценка</option>
+                            <option value="5">5</option>
+                            <option value="4">4</option>
+                            <option value="3">3</option>
+                            <option value="2">2</option>
+                            <option value="1">1</option>
+                        </Form.Select>
+                        <Form.Label style={{ color: "#f7f7f7", marginTop: "1rem" }}>Ваш отзыв:</Form.Label>
+                        <Form.Control as="textarea" name="comment" required style={{ background: "#27282a", color: "#f7f7f7" }} />
+                        <Button type="submit" className="mt-3 auth-button">Оставить отзыв</Button>
+                    </Form>
 
-                    <div>
-                        {/* <h5 style={{ color: "#f7f7f7" }}>Ваши комментарии:</h5> */}
-                        <ul className="mt-2" style={{ color: "#ccc" }}>
-                            {comments.length > 0 ? (
-                                comments.map((comment, idx) => (
-                                    <li key={idx} style={{ marginBottom: "0.5rem" }}>{comment}</li>
-                                ))
-                            ) : (
-                                <div>
-                                    <img src={mouse} width={300} alt="mouse" />
-                                    <p>Вы ещё не оставляли комментариев.</p>
-                                </div>
-                            )}
-                        </ul>
-                    </div>
-
+                    {/* Список отзывов или картинка */}
+                    <ul className="mt-2" style={{ color: "#ccc" }}>
+                        {comments.length > 0 ? (
+                            comments.map((comment, idx) => (
+                                <li key={idx} style={{ marginBottom: "0.5rem" }}>
+                                    <b>{comment.pattern}</b> — Оценка: {comment.rating}<br />
+                                    {comment.comment}
+                                </li>
+                            ))
+                        ) : (
+                            <div>
+                                <img src={mouse} width={300} alt="mouse" />
+                                <p>Вы ещё не оставляли комментариев.</p>
+                            </div>
+                        )}
+                    </ul>
                 </div>
             </div>
         </Container>

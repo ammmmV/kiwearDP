@@ -5,11 +5,15 @@ const userRouter = require('./userRouter')
 const typeRouter = require('./typeRouter')
 const fabricRouter = require('./fabricRouter')
 const basketRouter = require('./basketRouter')
+const orderRouter = require('./orderRouter')
+const reviewRouter = require('./reviewRouter')
 
 router.use('/user', userRouter)
 router.use('/type', typeRouter)
 router.use('/pattern', patternRouter)
 router.use('/fabric', fabricRouter)
 router.use('/basket', basketRouter)
+router.use('/order', orderRouter)
+router.use('/review', reviewRouter)
 
 module.exports = router

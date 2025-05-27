@@ -13,7 +13,7 @@ export default class BasketStore {
 
     setCurrentUserEmail(email) {
         this.currentUserEmail = email;
-        this.fetchBasket(); // Заменяем loadUserBasket на fetchBasket
+        this.fetchBasket();
     }
 
     setBasket(basket) {
@@ -87,15 +87,9 @@ export default class BasketStore {
 
     async removeFromBasket(id) {
         try {
-            const updatedBasket = this._basket.filter(item => 
-                item.id !== id && 
-                // !(item.patternId === id.patternId && 
-                //   item.typeId === id.typeId && 
-                //   item.fabricId === id.fabricId)
-                !(item.patternId === id.patternId)
-            );
+            const updatedBasket = this._basket.filter(item => item.id !== id);
             this.setBasket(updatedBasket);
-
+    
             if (localStorage.getItem('token')) {
                 try {
                     await $authHost.delete(`api/basket/${id}`);

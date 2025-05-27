@@ -4,6 +4,7 @@ import App from './App';
 import UserStore from './store/UserStore';
 import PatternStore from './store/PatternStore';
 import BasketStore from './store/BasketStore';
+import OrderStore from './store/OrderStore';
 
 export const Context = createContext(null);
 
@@ -16,7 +17,8 @@ root.render(
       value={{
         user: new UserStore(),
         pattern: new PatternStore(),
-        basket: new BasketStore()
+        basket: new BasketStore(),
+        order: new OrderStore()
       }}
     >
       <App />

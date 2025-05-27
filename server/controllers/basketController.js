@@ -120,6 +120,10 @@ class BasketController {
           id,
           basketId: basket.id,
         },
+        include: [{
+          model: Pattern,
+          attributes: ['id', 'name', 'price', 'img']
+        }]
       });
 
       if (!basketItem) {
@@ -133,6 +137,25 @@ class BasketController {
     } catch (e) {
       next(ApiError.badRequest(e.message));
     }
+  }
+
+  async clearBasket(req, res, next) {
+      try {
+          const userId = req.user.id;
+  
+          const basket = await Basket.findOne({ where: { userId } });
+          if (!basket) {
+              return next(ApiError.badRequest("Корзина не найдена"));
+          }
+  
+          await BasketItem.destroy({
+              where: { basketId: basket.id }
+          });
+  
+          return res.json({ message: "Корзина успешно очищена" });
+      } catch (e) {
+          next(ApiError.badRequest(e.message));
+      }
   }
 }
 

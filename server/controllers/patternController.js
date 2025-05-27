@@ -50,15 +50,12 @@ class PatternController {
         return res.json(patterns)
     }
 
-    async getOne(req, res){
-        const {id} = req.pragmas
-        const pattern = await Pattern.findOne(
-        {
-            where: {id},
-            include: [{model: PatternInfo, as: 'info'}]
-        }
-    )
-    return res.json(pattern)
+    async getOne(req, res) {
+        const {id} = req.params;
+        const pattern = await Pattern.findOne({
+            where: {id}
+        });
+        return res.json(pattern);
     }
 
     async updatePattern(req, res) {

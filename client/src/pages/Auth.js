@@ -84,18 +84,26 @@ const Auth = observer(() => {
               </>
             )}
             <Form.Control
-              className={`mt-3 ${
-                email.includes("") &&
-                (email.includes("@mail") || email.includes("@gmail")) &&
-                (email.includes(".ru") || email.includes(".com"))
-                  ? "is-valid"
-                  : "is-invalid"
-              } border-secondary`}
-              placeholder="Введите ваш email..."
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              style={{ background: "#27282a", color: "#f7f7f7" }}
-            />
+  className={`mt-3 ${
+    /^[a-zA-Z0-9._%+-]+@(mail|gmail)\.(ru|com)$/.test(email)
+      ? "is-valid"
+      : "is-invalid"
+  } border-secondary`}
+  placeholder="Введите ваш email..."
+  value={email}
+  onChange={(e) => {
+    const value = e.target.value;
+
+    // Запрещаем специальные символы кроме допустимых в email
+    const allowed = /^[a-zA-Z0-9@._-]*$/;
+
+    if (allowed.test(value)) {
+      setEmail(value);
+    }
+  }}
+  style={{ background: "#27282a", color: "#f7f7f7" }}
+/>
+
             <Form.Control
               className={`mt-2 ${
                 password && password.length > 3 ? "is-valid" : "is-invalid"

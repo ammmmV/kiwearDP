@@ -44,7 +44,7 @@ const ItemList = ({ items, ItemModal }) => {
                         <Image 
                             width={220} 
                             height={220} 
-                            src={process.env.REACT_APP_API_URL + item.img}
+                            src={process.env.REACT_APP_API_URL + '/' + item.img}
                             style={{ objectFit: 'cover' }}
                         />
                         <Card.Body>

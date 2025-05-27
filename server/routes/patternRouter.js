@@ -11,6 +11,5 @@ router.put('/:id', patternController.updatePattern)
 
 
 router.get('/patt', patternController.getPatterns)
-// router.get('/', patternController.getPatterns);
 
 module.exports = router

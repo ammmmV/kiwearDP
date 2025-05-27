@@ -36,7 +36,6 @@ const ItemModal = ({ show, onHide, item, type }) => {
     if (user.currentUser?.email) {
       basket.setUser(user.currentUser.email);
     }
-    // fetchPattern(id).then(data => setPattern(data));
   }, [user.currentUser?.email, basket]);
 
   const addToBasket = async () => {
@@ -70,8 +69,8 @@ const ItemModal = ({ show, onHide, item, type }) => {
           }}
         >
           <Image
-            width="30%"
-            src={process.env.REACT_APP_API_URL + item.img}
+            width="20%"
+            src={process.env.REACT_APP_API_URL + '/' + item.img}
             style={{ objectFit: "cover", maxHeight: "400px" }}
           />
           <ItemDescription style={{ margin: "5px 20px" }}>

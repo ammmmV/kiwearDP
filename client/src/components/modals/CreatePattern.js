@@ -52,7 +52,7 @@ const CreatePattern = observer(({ show, onHide }) => {
             </Modal.Header>
             <Modal.Body>
                 <Form>
-                    <Dropdown variant="success" className="mt-2 mb-2">
+                    <Dropdown variant="success" style={{marginTop: '2px', marginBottom: '2px'}}>
                         <Dropdown.Toggle variant="success">{pattern.selectedType?.name || "Выберите фурнитуру"}</Dropdown.Toggle>
                         <Dropdown.Menu style={{ maxHeight: '300px', overflowY: 'auto' }}>
                             {pattern.types?.map(type =>
@@ -65,7 +65,7 @@ const CreatePattern = observer(({ show, onHide }) => {
                             )}
                         </Dropdown.Menu>
                     </Dropdown>
-                    <Dropdown className="mt-2 mb-2">
+                    <Dropdown style={{marginTop: '2px', marginBottom: '2px'}}>
                         <Dropdown.Toggle variant="success">{pattern.selectedFabric?.name || "Выберите ткань"}</Dropdown.Toggle>
                         <Dropdown.Menu style={{ maxHeight: '300px', overflowY: 'auto' }}>
                             {pattern.fabrics?.map(fabric =>
@@ -81,7 +81,7 @@ const CreatePattern = observer(({ show, onHide }) => {
                     <Form.Control
                         value={name}
                         onChange={e => setName(e.target.value)}
-                        className="mt-3"
+                            style={{marginTop: '3px'}}
                         placeholder="Введите название"
                     />
                     <Form.Control

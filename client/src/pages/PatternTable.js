@@ -140,7 +140,9 @@ const PatternTable = () => {
                                     />
                                 ) : (
                                     <img
-                                        src={process.env.REACT_APP_API_URL + pattern.img}
+                                        // src={`${process.env.REACT_APP_API_URL}/static/${pattern.img}`}
+                                        src={process.env.REACT_APP_API_URL + '/' + pattern.img}
+
                                         alt={pattern.name}
                                         style={{ maxWidth: '100px', maxHeight: '100px', objectFit: 'cover' }}
                                     />

@@ -80,6 +80,9 @@ const Orders = () => {
       case "PENDING":
         variant = "warning";
         break;
+      case "PROCESSING":
+        variant = "primary";
+        break;
       case "COMPLETED":
         variant = "success";
         break;
@@ -162,7 +165,7 @@ const Orders = () => {
           </OrderInfo>
           <div style={{ display: "flex", alignItems: "center", gap: "2rem" }}>
             <span style={{ color: "#ffbf00" }}>
-              {order.total_price} BYN
+              {Number(order.total_price).toFixed(2)} BYN
             </span>
             {getStatusBadge(order.status)}
           </div>
@@ -285,7 +288,7 @@ const Orders = () => {
                     fontWeight: "bold",
                   }}
                 >
-                  {Number(selectedOrder.total_price)} BYN
+                  {Number(selectedOrder.total_price).toFixed(2)} BYN
                 </OrderDetailValue>
               </OrderDetailRow>
 

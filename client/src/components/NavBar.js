@@ -1,6 +1,7 @@
 import React, { useState, useContext } from "react";
 import { Context } from "../index";
 import Navbar from "react-bootstrap/Navbar";
+import {  Dropdown } from "react-bootstrap";
 import Nav from "react-bootstrap/Nav";
 import { NavLink, useLocation } from "react-router-dom";
 import {
@@ -13,6 +14,7 @@ import {
   BASKET_ROUTE,
   USERS_FIX_ROUTE,
   ORDERS_ROUTE,
+  ADMIN_ORDERS_ROUTE
 } from "../utils/consts";
 import { Button } from "react-bootstrap";
 import { observer } from "mobx-react-lite";
@@ -239,41 +241,73 @@ const NavBar = observer(() => {
         {user.isAuth ? (
           <Nav>
             {user.user.role === 'ADMIN' && (
-              <>
-                <Button
-                  variant={isActive(ADMIN_ROUTE) ? "outline-success" : "outline-light"}
-                  onClick={() => history(ADMIN_ROUTE)}
-                  className="items"
-                  style={{ fontSize: "1.1em" }}
+              <Dropdown>
+                <Dropdown.Toggle 
+                  variant="outline-success"
+                  style={{ 
+                    fontSize: "1.1em",
+                    borderColor: '#267b54',
+                    color: 'white',
+                    backgroundColor: isActive(ADMIN_ROUTE) || 
+                                   isActive(USERS_FIX_ROUTE) || 
+                                   isActive(PATTERNS_FIX_ROUTE) || 
+                                   isActive(ADMIN_ORDERS_ROUTE) 
+                                   ? '#267b54' 
+                                   : 'transparent'
+                  }}
                 >
-                  Админ панель
-                </Button>
-                <Button
-                  variant={isActive(USERS_FIX_ROUTE) ? "outline-success" : "outline-light"}
-                  onClick={() => history(USERS_FIX_ROUTE)}
-                  style={{ fontSize: "1.1em" }}
-                  className="items"
+                  {isActive(ADMIN_ROUTE) ? 'Админ панель' :
+                   isActive(USERS_FIX_ROUTE) ? 'Пользователи' :
+                   isActive(PATTERNS_FIX_ROUTE) ? 'Лекала' :
+                   isActive(ADMIN_ORDERS_ROUTE) ? 'Заказы' :
+                   'Панель администратора'}
+                </Dropdown.Toggle>
+                <Dropdown.Menu 
+                  variant="dark" 
+                  style={{ 
+                    backgroundColor: 'rgba(33, 37, 41, 0.95)',
+                    borderColor: '#267b54'
+                  }}
                 >
-                  Пользователи
-                </Button>
-                <Button
-                  variant={isActive(PATTERNS_FIX_ROUTE) ? "outline-success" : "outline-light"}
-                  onClick={() => history(PATTERNS_FIX_ROUTE)}
-                  style={{ fontSize: "1.1em" }}
-                  className="items"
-                >
-                  Лекала
-                </Button>
-              </>
+                  <Dropdown.Item 
+                    onClick={() => history(ADMIN_ROUTE)}
+                    active={isActive(ADMIN_ROUTE)}
+                    style={{
+                      backgroundColor: isActive(ADMIN_ROUTE) ? '#267b54' : 'transparent',
+                    }}
+                  >
+                    Админ панель
+                  </Dropdown.Item>
+                  <Dropdown.Item 
+                    onClick={() => history(USERS_FIX_ROUTE)}
+                    active={isActive(USERS_FIX_ROUTE)}
+                    style={{
+                      backgroundColor: isActive(USERS_FIX_ROUTE) ? '#267b54' : 'transparent',
+                    }}
+                  >
+                    Пользователи
+                  </Dropdown.Item>
+                  <Dropdown.Item 
+                    onClick={() => history(PATTERNS_FIX_ROUTE)}
+                    active={isActive(PATTERNS_FIX_ROUTE)}
+                    style={{
+                      backgroundColor: isActive(PATTERNS_FIX_ROUTE) ? '#267b54' : 'transparent',
+                    }}
+                  >
+                    Лекала
+                  </Dropdown.Item>
+                  <Dropdown.Item 
+                    onClick={() => history(ADMIN_ORDERS_ROUTE)}
+                    active={isActive(ADMIN_ORDERS_ROUTE)}
+                    style={{
+                      backgroundColor: isActive(ADMIN_ORDERS_ROUTE) ? '#267b54' : 'transparent',
+                    }}
+                  >
+                    Заказы
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
             )}
-            {/* <Button
-              variant={"outline-light"}
-              onClick={() => logOut()}
-              className="ml-2"
-              style={{ fontSize: "1.1em" }}
-            >
-              Выйти
-            </Button> */}
           </Nav>
         ) : (
           <Nav className="ml-auto" style={{ color: "white" }}>

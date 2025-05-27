@@ -5,6 +5,7 @@ import UserStore from './store/UserStore';
 import PatternStore from './store/PatternStore';
 import BasketStore from './store/BasketStore';
 import OrderStore from './store/OrderStore';
+// import ReviewStore from './store/ReviewStore';
 
 export const Context = createContext(null);
 
@@ -18,7 +19,8 @@ root.render(
         user: new UserStore(),
         pattern: new PatternStore(),
         basket: new BasketStore(),
-        order: new OrderStore()
+        order: new OrderStore(),
+        // review: new ReviewStore()
       }}
     >
       <App />

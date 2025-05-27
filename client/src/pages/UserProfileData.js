@@ -37,7 +37,7 @@ const UserProfile = observer(() => {
     
         const fetchOrderedPatterns = async () => {
             try {
-                await order.fetchOrders(); // Ждём загрузки
+                await order.fetchOrders();
                 const allPatterns = order.orders.flatMap(o => o.patterns || []);
                 const uniquePatterns = Array.from(new Map(allPatterns.map(p => [p.id, p])).values());
                 setOrderedPatterns(uniquePatterns);
@@ -89,11 +89,10 @@ const UserProfile = observer(() => {
         e.preventDefault();
         try {
             await ReviewStore.addReview({
-                patternId: selectedPatternId,
-                rating,
+                patternId: Number(selectedPatternId),
+                rating: Number(rating),
                 comment
-            });
-            // Сброс формы после успешной отправки
+              });              
             setSelectedPatternId("");
             setRating(0);
             setComment("");
@@ -164,8 +163,7 @@ const UserProfile = observer(() => {
                         </div>
                     </Form>
 
-                    {/* Форма для нового отзыва */}
-                    <Form onSubmit={handleReviewSubmit} className="mb-4">
+                        <Form onSubmit={handleReviewSubmit} className="mb-4">
                         <Form.Label style={{ color: "#f7f7f7" }}>Выберите товар:</Form.Label>
                         <Form.Select name="patternId" required style={{ background: "#27282a", color: "#f7f7f7" }}>
                             <option value="">Выберите товар</option>
@@ -187,7 +185,6 @@ const UserProfile = observer(() => {
                         <Button type="submit" className="mt-3 auth-button">Оставить отзыв</Button>
                     </Form>
 
-                    {/* Список отзывов или картинка */}
                     <ul className="mt-2" style={{ color: "#ccc" }}>
                         {comments.length > 0 ? (
                             comments.map((comment, idx) => (

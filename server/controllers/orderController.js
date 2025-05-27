@@ -137,15 +137,38 @@ class OrderController {
         }
     }
 
+    async getAllOrders(req, res, next) {
+        try {
+            const orders = await Order.findAll({
+                include: [
+                    {
+                        model: Pattern,
+                        through: {
+                            model: OrderItem,
+                            attributes: ['quantity']
+                        }
+                    }
+                ],
+                order: [['createdAt', 'DESC']]
+            });
+            return res.json(orders);
+        } catch (e) {
+            next(ApiError.internal('Ошибка при получении заказов'));
+        }
+    }
+
     async updateStatus(req, res, next) {
         try {
             const { id } = req.params;
             const { status } = req.body;
 
-            const order = await Order.findOne({ where: { id } });
+            if (!['PENDING', 'PROCESSING', 'COMPLETED', 'CANCELLED'].includes(status)) {
+                return next(ApiError.badRequest('Некорректный статус заказа'));
+            }
 
+            const order = await Order.findByPk(id);
             if (!order) {
-                return next(ApiError.badRequest('Заказ не найден'));
+                return next(ApiError.notFound('Заказ не найден'));
             }
 
             order.status = status;
@@ -153,7 +176,34 @@ class OrderController {
 
             return res.json(order);
         } catch (e) {
-            next(ApiError.badRequest(e.message));
+            next(ApiError.internal('Ошибка при обновлении статуса заказа'));
+        }
+    }
+
+    async deleteOrder(req, res, next) {
+        try {
+            const { id } = req.params;
+            
+            const order = await Order.findOne({
+                where: { id },
+                include: [{ model: OrderItem }]
+            });
+        
+            if (!order) {
+                return next(ApiError.notFound('Заказ не найден'));
+            }
+        
+            // Удаляем связанные OrderItems
+            await OrderItem.destroy({
+                where: { orderId: id }
+            });
+        
+            // Удаляем сам заказ
+            await order.destroy();
+        
+            return res.json({ message: 'Заказ успешно удален' });
+        } catch (e) {
+            next(ApiError.internal('Ошибка при удалении заказа'));
         }
     }
 }

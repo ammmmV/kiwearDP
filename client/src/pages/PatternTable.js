@@ -64,7 +64,16 @@ const PatternTable = () => {
 
     const handleSave = async (patternId) => {
         try {
-            await updatePattern(patternId, editData);
+            const formData = new FormData();
+            formData.append('name', editData.name);
+            formData.append('price', editData.price);
+            formData.append('description', editData.description);
+            
+            if (editData.img instanceof File) {
+                formData.append('img', editData.img);
+            }
+
+            await updatePattern(patternId, formData);
             setPatterns((prevPatterns) =>
                 prevPatterns.map((pattern) =>
                     pattern.id === patternId ? { ...pattern, ...editData } : pattern
@@ -134,15 +143,12 @@ const PatternTable = () => {
                             <td>
                                 {editMode === pattern.id ? (
                                     <input
-                                        type="text"
-                                        value={editData.img}
-                                        onChange={(e) => handleChange('img', e.target.value)}
+                                        type="file"
+                                        onChange={(e) => handleChange('img', e.target.files[0])}
                                     />
                                 ) : (
                                     <img
-                                        // src={`${process.env.REACT_APP_API_URL}/static/${pattern.img}`}
                                         src={process.env.REACT_APP_API_URL + '/' + pattern.img}
-
                                         alt={pattern.name}
                                         style={{ maxWidth: '100px', maxHeight: '100px', objectFit: 'cover' }}
                                     />

@@ -8,23 +8,64 @@ const StyledContainer = styled(Container)`
   color: white;
 `;
 
+
+const StyledDropdownToggle = styled(Dropdown.Toggle)`
+  background-color: rgba(39, 40, 42, 0.95) !important;
+  color: white !important;
+  border-color: #267b54 !important;
+  width: 100%;
+  text-align: left;
+  
+  &:hover, &:focus, &:active {
+    background-color: #267b54 !important;
+    border-color: #267b54 !important;
+    color: white !important;
+  }
+`;
+
+const StyledDropdownItem = styled(Dropdown.Item)`
+  background-color: rgba(39, 40, 42, 0.95) !important;
+  color: white !important;
+  
+  &:hover, &:focus, &:active {
+    background-color: #267b54 !important;
+    color: white !important;
+  }
+`;
+
+
 const StyledSelect = styled(Form.Select)`
   background-color: rgba(39, 40, 42, 0.95) !important;
   color: white !important;
   border-color: #267b54 !important;
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
   
   &:focus {
     border-color: #267b54 !important;
     box-shadow: 0 0 0 0.2rem rgba(38, 123, 84, 0.25) !important;
+    background-color: rgba(39, 40, 42, 0.95) !important;
   }
 
-  option {
-    background-color: rgba(39, 40, 42, 0.95);
-    color: white;
+  &:hover {
+    background-color: #267b54 !important;
+    border-color: #267b54 !important;
+    cursor: pointer;
   }
 
-  option:checked {
-    background-color: #267b54;
+  & option {
+    background-color: rgba(39, 40, 42, 0.95) !important;
+    color: white !important;
+
+    &:hover, &:focus, &:active, &:checked {
+      background-color: #267b54 !important;
+      color: white !important;
+    }
+  }
+
+  &::-ms-expand {
+    display: none;
   }
 `;
 

@@ -59,10 +59,9 @@ const OrderItem = sequelize.define('order_item', {
     quantity: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 1 },
     orderId: { type: DataTypes.INTEGER, allowNull: false },
     patternId: { type: DataTypes.INTEGER, allowNull: false }
-  });
-  
+});
 
-  const Review = sequelize.define('review', {
+const Review = sequelize.define('review', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     orderItemId: { type: DataTypes.INTEGER, allowNull: false },
     patternId: { type: DataTypes.INTEGER, allowNull: false },
@@ -70,8 +69,8 @@ const OrderItem = sequelize.define('order_item', {
     date: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
     rating: { type: DataTypes.INTEGER, allowNull: false },
     comment: { type: DataTypes.TEXT, allowNull: false }
-  });
-  
+});
+
 
 OrderItem.hasOne(Review);
 Review.belongsTo(OrderItem);

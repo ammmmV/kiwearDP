@@ -256,7 +256,7 @@ const NavBar = observer(() => {
                                    : 'transparent'
                   }}
                 >
-                  {isActive(ADMIN_ROUTE) ? 'Админ панель' :
+                  {isActive(ADMIN_ROUTE) ? 'Элементы' :
                    isActive(USERS_FIX_ROUTE) ? 'Пользователи' :
                    isActive(PATTERNS_FIX_ROUTE) ? 'Лекала' :
                    isActive(ADMIN_ORDERS_ROUTE) ? 'Заказы' :

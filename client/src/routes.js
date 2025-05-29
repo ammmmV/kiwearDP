@@ -11,7 +11,8 @@ import {
   USERS_FIX_ROUTE,
   PATTERNS_FIX_ROUTE,
   ORDERS_ROUTE,
-  ADMIN_ORDERS_ROUTE
+  ADMIN_ORDERS_ROUTE,
+  ADMIN_REVIEWS_ROUTE
 } from "./utils/consts";
 import Basket from "./pages/Basket";
 // import Shop from "./pages/Shop";
@@ -24,6 +25,7 @@ import Patterns from "./pages/Patterns";
 import Catalog from "./pages/Catalog";
 import Orders from "./pages/Orders";
 import AdminOrders from "./pages/AdminOrders";
+import AdminReviews from "./pages/AdminReviews";
 
 export const authRoutes = [
   {
@@ -44,8 +46,12 @@ export const authRoutes = [
   },
   {
     path: ADMIN_ORDERS_ROUTE,
-    Component: AdminOrders
-}
+    Component: AdminOrders,
+  },
+  {
+    path: ADMIN_REVIEWS_ROUTE,
+    Component: AdminReviews
+  }
 ];
 
 export const publicRoutes = [

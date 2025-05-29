@@ -1,5 +1,5 @@
 import { makeAutoObservable } from 'mobx';
-import { fetchReviews, createReview } from '../http/reviewAPI';
+import { fetchReviews, createReview, deleteReview } from '../http/reviewAPI';
 
 class ReviewStore {
     reviews = [];
@@ -26,5 +26,16 @@ class ReviewStore {
             throw error;
         }
     }
+
+    async deleteReview(id) {
+        try {
+            await deleteReview(id);
+            this.reviews = this.reviews.filter(review => review.id !== id);
+        } catch (error) {
+            console.error("Ошибка при удалении отзыва:", error);
+            throw error;
+        }
+    }
 }
+
 export default new ReviewStore();

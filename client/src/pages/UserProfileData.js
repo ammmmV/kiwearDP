@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import InputMask from "react-input-mask";
-import { Container, Form } from "react-bootstrap";
+import { Container, Form, Modal } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import { observer } from "mobx-react-lite";
 import { updateUser } from "../http/userAPI";
@@ -10,6 +10,8 @@ import { LOGIN_ROUTE } from "../utils/consts";
 import mouse from "../assets/mouse.png";
 import "../styles/Style.css";
 import { createReview } from "../http/reviewAPI";
+import { Link } from 'react-router-dom';
+import { REVIEWS_ROUTE } from '../utils/consts';
 import ReviewStore from "../store/ReviewStore";
 
 const UserProfile = observer(() => {
@@ -29,6 +31,7 @@ const UserProfile = observer(() => {
 
   const [selectedPattern, setSelectedPattern] = useState(null);
   const [canReview, setCanReview] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     if (user && user.user) {
@@ -116,6 +119,15 @@ const UserProfile = observer(() => {
     setCanReview(hasCompletedOrder);
   };
 
+  const handleClose = () => {
+    setShowModal(false);
+    setSelectedPatternId("");
+    setRating("");
+    setComment("");
+  };
+  
+  const handleShow = () => setShowModal(true);
+
   return (
     <Container style={{ minHeight: "90vh" }}>
       <div style={{ display: "flex", justifyContent: "center" }}>
@@ -187,71 +199,6 @@ const UserProfile = observer(() => {
             </div>
           </Form>
 
-          <Form onSubmit={handleReviewSubmit} className="mb-4">
-            <Form.Label style={{ color: "#f7f7f7" }}>
-              Выберите товар:
-            </Form.Label>
-            <Form.Select
-              name="patternId"
-              required
-              style={{ background: "#27282a", color: "#f7f7f7" }}
-              onChange={(e) => {
-                const patternId = e.target.value;
-                setSelectedPatternId(patternId);
-                checkCanReview(patternId);
-              }}
-            >
-              <option value="">Лекало</option>
-              {orderedPatterns.map((pattern) => (
-                <option key={pattern.id} value={pattern.id}>
-                  {pattern.name}
-                </option>
-              ))}
-            </Form.Select>
-            {selectedPatternId && !canReview && (
-              <div style={{ color: "#ff6b6b", marginTop: "0.5rem" }}>
-                Отзыв можно оставить только на товары из завершённых заказов
-              </div>
-            )}
-            <div>
-              <Form.Label style={{ color: "#f7f7f7", marginTop: "1rem" }}>
-                Оценка:
-              </Form.Label>
-              <Form.Select
-                name="rating"
-                required
-                value={rating}
-                onChange={(e) => setRating(e.target.value)}
-                style={{ background: "#27282a", color: "#f7f7f7" }}
-              >
-                <option value="">___</option>
-                <option value="5">5</option>
-                <option value="4">4</option>
-                <option value="3">3</option>
-                <option value="2">2</option>
-                <option value="1">1</option>
-              </Form.Select>
-            </div>
-            <Form.Label style={{ color: "#f7f7f7", marginTop: "1rem" }}>
-              Ваш отзыв:
-            </Form.Label>
-            <Form.Control
-              as="textarea"
-              name="comment"
-              required
-              value={comment}
-              onChange={(e) => setComment(e.target.value)}
-              style={{ background: "#27282a", color: "#f7f7f7" }}
-            />
-            <Button
-              type="submit"
-              className="mt-3 auth-button"
-              disabled={!canReview}
-            >
-              Оставить отзыв
-            </Button>{" "}
-          </Form>
-
           <ul className="mt-2" style={{ color: "#ccc" }}>
             {comments.length > 0 ? (
               comments.map((comment, idx) => (
@@ -262,14 +209,101 @@ const UserProfile = observer(() => {
                 </li>
               ))
             ) : (
-              <div>
+              <div style={{ textAlign: 'center' }}>
                 <img src={mouse} width={300} alt="mouse" />
-                <p>Вы ещё не оставляли комментариев.</p>
+                <p>Вы ещё не оставляли отзывов.</p>
+                <Button variant="outline-light" onClick={handleShow} className="mb-2">
+                  Добавить отзыв
+                </Button>
+                {comments.length > 0 && (
+                  <div>
+                    <Link to={REVIEWS_ROUTE} style={{ color: '#f7f7f7', textDecoration: 'none' }}>
+                      Перейти на страницу отзывов
+                    </Link>
+                  </div>
+                )}
               </div>
             )}
           </ul>
         </div>
       </div>
+      <Modal show={showModal} onHide={handleClose} centered>
+        <Modal.Header closeButton style={{ background: '#27282a', color: '#f7f7f7', border: 'none' }}>
+          <Modal.Title>Добавить отзыв</Modal.Title>
+        </Modal.Header>
+        <Modal.Body style={{ background: '#27282a', color: '#f7f7f7' }}>
+          <Form onSubmit={handleReviewSubmit}>
+            <Form.Group className="mb-3">
+              <Form.Label>Выберите товар:</Form.Label>
+              <Form.Select
+                name="patternId"
+                required
+                style={{ background: '#27282a', color: '#f7f7f7' }}
+                onChange={(e) => {
+                  const patternId = e.target.value;
+                  setSelectedPatternId(patternId);
+                  checkCanReview(patternId);
+                }}
+              >
+                <option value="">Лекало</option>
+                {orderedPatterns.map((pattern) => (
+                  <option key={pattern.id} value={pattern.id}>
+                    {pattern.name}
+                  </option>
+                ))}
+              </Form.Select>
+              {selectedPatternId && !canReview && (
+                <div style={{ color: '#ff6b6b', marginTop: '0.5rem' }}>
+                  Отзыв можно оставить только на товары из завершённых заказов
+                </div>
+              )}
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Оценка:</Form.Label>
+              <Form.Select
+                name="rating"
+                required
+                value={rating}
+                onChange={(e) => setRating(e.target.value)}
+                style={{ background: '#27282a', color: '#f7f7f7' }}
+              >
+                <option value="">___</option>
+                <option value="5">5</option>
+                <option value="4">4</option>
+                <option value="3">3</option>
+                <option value="2">2</option>
+                <option value="1">1</option>
+              </Form.Select>
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Ваш отзыв:</Form.Label>
+              <Form.Control
+                as="textarea"
+                name="comment"
+                required
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+                style={{ background: '#27282a', color: '#f7f7f7' }}
+              />
+            </Form.Group>
+
+            <div className="d-flex justify-content-end">
+              <Button variant="secondary" onClick={handleClose} className="me-2">
+                Отмена
+              </Button>
+              <Button
+                type="submit"
+                className="auth-button"
+                disabled={!canReview}
+              >
+                Отправить
+              </Button>
+            </div>
+          </Form>
+        </Modal.Body>
+      </Modal>
     </Container>
   );
 });

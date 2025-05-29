@@ -1,4 +1,4 @@
-const { Review, Order, OrderItem } = require("../models/models");
+const { Review, Order, OrderItem, User, Pattern } = require("../models/models");
 
 class ReviewController {
   async create(req, res) {
@@ -71,15 +71,42 @@ class ReviewController {
   }
   async getAll(req, res) {
     try {
-      const reviews = await Review.findAll();
-      console.error("❌ Ошибка при создании отзыва:", e);
+      const reviews = await Review.findAll({
+        attributes: ['id', 'rating', 'comment', 'date'],
+        include: [
+          { 
+            model: Pattern,
+            attributes: ['id', 'name']
+          },
+          { 
+            model: User,
+            attributes: ['id', 'email']
+          }
+        ]
+      });
       return res.json(reviews);
     } catch (e) {
+      console.error("Ошибка при получении отзывов:", e);
       res
         .status(500)
         .json({ message: "Ошибка при получении отзывов", error: e.message });
     }
   }
+
+  async deleteReview(req, res) {
+    try {
+      const { id } = req.params;
+      const review = await Review.findByPk(id);
+      if (!review) {
+        return res.status(404).json({ message: 'Отзыв не найден' });
+      }
+      await review.destroy();
+      return res.status(200).json({ message: 'Отзыв успешно удалён' });
+    } catch (error) {
+      console.error("Ошибка при удалении отзыва:", error);
+      return res.status(500).json({ message: 'Ошибка сервера' });
+    }
+  };
 }
 
 module.exports = new ReviewController();

@@ -44,6 +44,32 @@ const NavBar = observer(() => {
     return location.pathname === path;
   };
 
+  const getPageTitle = (path) => {
+    switch (path) {
+      case SHOP_ROUTE:
+        return "Каталог";
+      case BASKET_ROUTE:
+        return "Корзина";
+      case USER_PROFILE_DATA_ROUTE:
+        return "Личный кабинет";
+      case ORDERS_ROUTE:
+        return "Заказы";
+      case REVIEWS_ROUTE:
+        return "Отзывы";
+      case PATTERNS_FIX_ROUTE:
+        return "Лекала";
+      case ADMIN_ORDERS_ROUTE:
+        return "Заказы";
+      case ADMIN_REVIEWS_ROUTE:
+        return "Отзывы";
+      case USERS_FIX_ROUTE:
+        return "Пользователи";
+      default:
+        return "";
+    }
+  };
+
+  const currentPageTitle = getPageTitle(location.pathname);
   const menuItemStyle = (path) => ({
     cursor: "pointer",
     color: isActive(path) ? "white" : "#c4c4c4",
@@ -99,6 +125,20 @@ const NavBar = observer(() => {
           >
             KiWear
           </span>
+          {currentPageTitle && (
+            <span
+              style={{
+                color: "#fff",
+                fontSize: "1.5em",
+                marginLeft: "15px",
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <span style={{ color: "#fff", margin: "0 10px 0 0" }}>→</span>
+              {currentPageTitle}
+            </span>
+          )}
 
           <div
             className={`menuShow ${menuVisible ? "active" : ""}`}

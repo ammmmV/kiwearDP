@@ -86,7 +86,7 @@ class BasketController {
 
   async removeFromBasket(req, res, next) {
     try {
-      const { patternId } = req.params;
+      const { id } = req.params;
       const userId = req.user.id;
 
       const basket = await Basket.findOne({ where: { userId } });
@@ -95,7 +95,7 @@ class BasketController {
       }
 
       await BasketItem.destroy({
-        where: { basketId: basket.id, patternId },
+        where: { basketId: basket.id, id },
       });
 
       return res.json({ message: "Товар удален из корзины" });

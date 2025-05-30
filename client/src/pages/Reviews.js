@@ -10,7 +10,6 @@ const Reviews = observer(() => {
 
     return (
         <Container style={{ minHeight: '90vh' }}>
-            <h2 className="mt-4 mb-4" style={{ color: '#f7f7f7' }}>Отзывы пользователей</h2>
             <div className="reviews-container">
                 {ReviewStore.reviews.map((review, index) => (
                     <div key={index} className="review-card" style={{ 

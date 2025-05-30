@@ -10,6 +10,11 @@ export const fetchReviews = async () => {
   return data;
 };
 
+export const fetchUserReviews = async () => {
+  const { data } = await $authHost.get('/api/review/user');
+  return data;
+};
+
 export const deleteReview = async (id) => {
   try {
       const { data } = await $authHost.delete('api/review/' + id);

@@ -1,8 +1,9 @@
 import { makeAutoObservable } from 'mobx';
-import { fetchReviews, createReview, deleteReview } from '../http/reviewAPI';
+import { fetchReviews, createReview, deleteReview, fetchUserReviews } from '../http/reviewAPI';
 
 class ReviewStore {
     reviews = [];
+    userReviews = [];
     constructor() {
         makeAutoObservable(this);
     }
@@ -12,6 +13,15 @@ class ReviewStore {
             this.reviews = await fetchReviews();
         } catch (error) {
             console.error("Ошибка при загрузке отзывов:", error);
+            throw error;
+        }
+    }
+
+    async loadUserReviews() {
+        try {
+            this.userReviews = await fetchUserReviews();
+        } catch (error) {
+            console.error("Ошибка при загрузке отзывов пользователя:", error);
             throw error;
         }
     }

@@ -89,7 +89,7 @@ export default class BasketStore {
         try {
             const updatedBasket = this._basket.filter(item => item.id !== id);
             this.setBasket(updatedBasket);
-    
+
             if (localStorage.getItem('token')) {
                 try {
                     await $authHost.delete(`api/basket/${id}`);
@@ -147,7 +147,7 @@ export default class BasketStore {
 
             if (localStorage.getItem('token')) {
                 try {
-                    await $authHost.delete('api/basket/clear');
+                    await $authHost.delete('api/basket/clear/all');
                 } catch (e) {
                     console.error('Ошибка при очистке корзины на сервере:', e);
                 }

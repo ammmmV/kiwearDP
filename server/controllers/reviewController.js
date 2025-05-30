@@ -107,6 +107,32 @@ class ReviewController {
       return res.status(500).json({ message: 'Ошибка сервера' });
     }
   };
+
+  async getUserReviews(req, res) {
+    try {
+      if (!req.user) {
+        return res.status(401).json({ message: "Пользователь не авторизован" });
+      }
+      
+      const userId = req.user.id;
+      const reviews = await Review.findAll({
+        where: { userId: userId },
+        attributes: ['id', 'rating', 'comment', 'date'],
+        include: [
+          { 
+            model: Pattern,
+            attributes: ['id', 'name']
+          }
+        ]
+      });
+      return res.json(reviews);
+    } catch (e) {
+      console.error("Ошибка при получении отзывов пользователя:", e);
+      res
+        .status(500)
+        .json({ message: "Ошибка при получении отзывов", error: e.message });
+    }
+  }
 }
 
 module.exports = new ReviewController();

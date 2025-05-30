@@ -57,7 +57,23 @@ const UserProfile = observer(() => {
 
     fetchOrderedPatterns();
 
-    setComments([]);
+    const loadUserReviews = async () => {
+      try {
+        await ReviewStore.loadUserReviews();
+        setComments(ReviewStore.userReviews.map(review => ({
+          id: review.id,
+          pattern: review.pattern.name,
+          rating: review.rating,
+          comment: review.comment,
+          date: new Date(review.date).toLocaleDateString()
+        })));
+      } catch (error) {
+        console.error("Ошибка при загрузке отзывов пользователя:", error);
+        setComments([]);
+      }
+    };
+
+    loadUserReviews();
   }, [user.user, order]);
 
   const handleLogout = () => {

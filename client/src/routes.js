@@ -12,10 +12,10 @@ import {
   PATTERNS_FIX_ROUTE,
   ORDERS_ROUTE,
   ADMIN_ORDERS_ROUTE,
-  ADMIN_REVIEWS_ROUTE
+  ADMIN_REVIEWS_ROUTE,
+  REVIEWS_ROUTE
 } from "./utils/consts";
 import Basket from "./pages/Basket";
-// import Shop from "./pages/Shop";
 import Auth from "./pages/Auth";
 import UserTable from "./pages/UserTable";
 import PatternTable from "./pages/PatternTable";
@@ -26,6 +26,7 @@ import Catalog from "./pages/Catalog";
 import Orders from "./pages/Orders";
 import AdminOrders from "./pages/AdminOrders";
 import AdminReviews from "./pages/AdminReviews";
+import Reviews from "./pages/Reviews";
 
 export const authRoutes = [
   {
@@ -82,5 +83,9 @@ export const publicRoutes = [
   {
     path: PATTERNS_ROUTE,
     Component: Patterns,
+  },
+  {
+    path: REVIEWS_ROUTE,
+    Component: Reviews,
   },
 ];

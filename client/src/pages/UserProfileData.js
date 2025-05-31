@@ -10,8 +10,8 @@ import { LOGIN_ROUTE } from "../utils/consts";
 import mouse from "../assets/mouse.png";
 import "../styles/Style.css";
 import { createReview } from "../http/reviewAPI";
-import { Link } from 'react-router-dom';
-import { REVIEWS_ROUTE } from '../utils/consts';
+import { Link } from "react-router-dom";
+import { REVIEWS_ROUTE } from "../utils/consts";
 import ReviewStore from "../store/ReviewStore";
 
 const UserProfile = observer(() => {
@@ -28,6 +28,8 @@ const UserProfile = observer(() => {
   const [selectedPatternId, setSelectedPatternId] = useState("");
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
+  const [patternImages, setPatternImages] = useState({});
+  const [orderDetails, setOrderDetails] = useState({});
 
   const [selectedPattern, setSelectedPattern] = useState(null);
   const [canReview, setCanReview] = useState(false);
@@ -49,6 +51,29 @@ const UserProfile = observer(() => {
           new Map(allPatterns.map((p) => [p.id, p])).values()
         );
         setOrderedPatterns(uniquePatterns);
+
+        const orderDetailsMap = {};
+        order.orders.forEach((o) => {
+          o.patterns.forEach((p) => {
+            if (
+              !orderDetailsMap[p.id] ||
+              new Date(o.order_date) > new Date(orderDetailsMap[p.id].date)
+            ) {
+              orderDetailsMap[p.id] = {
+                date: o.order_date,
+                price: p.price,
+                orderNumber: o.order_number,
+              };
+            }
+          });
+        });
+        setOrderDetails(orderDetailsMap);
+
+        const imagesMap = {};
+        uniquePatterns.forEach((p) => {
+          imagesMap[p.id] = p.img;
+        });
+        setPatternImages(imagesMap);
       } catch (e) {
         console.error("Ошибка при получении заказов:", e);
         setOrderedPatterns([]);
@@ -60,13 +85,16 @@ const UserProfile = observer(() => {
     const loadUserReviews = async () => {
       try {
         await ReviewStore.loadUserReviews();
-        setComments(ReviewStore.userReviews.map(review => ({
-          id: review.id,
-          pattern: review.pattern.name,
-          rating: review.rating,
-          comment: review.comment,
-          date: new Date(review.date).toLocaleDateString()
-        })));
+        setComments(
+          ReviewStore.userReviews.map((review) => ({
+            id: review.id,
+            patternId: review.pattern.id,
+            pattern: review.pattern.name,
+            rating: review.rating,
+            comment: review.comment,
+            date: new Date(review.date).toLocaleDateString(),
+          }))
+        );
       } catch (error) {
         console.error("Ошибка при загрузке отзывов пользователя:", error);
         setComments([]);
@@ -114,7 +142,7 @@ const UserProfile = observer(() => {
       await ReviewStore.addReview({
         patternId: Number(selectedPatternId),
         rating: Number(rating),
-        comment
+        comment,
       });
       setSelectedPatternId("");
       setRating("");
@@ -141,15 +169,36 @@ const UserProfile = observer(() => {
     setRating("");
     setComment("");
   };
-  
+
   const handleShow = () => setShowModal(true);
 
   return (
     <Container style={{ minHeight: "90vh" }}>
       <div style={{ display: "flex", justifyContent: "center" }}>
-        <div className="profile-card">
-          <Form style={{ display: "flex", flexDirection: "column" }}>
-            <Form.Label style={{ color: "#f7f7f7" }}>Email:</Form.Label>
+        <div
+          className="profile-card"
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            maxWidth: comments.length > 0 ? "1200px" : "900px",
+            width: comments.length > 0 ? "90%" : "80%",
+          }}
+        >
+          <Form
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              width: "30%",
+              minWidth: "350px",
+              marginRight: "20px",
+            }}
+          >
+            <img
+              src={mouse}
+              width={comments.length > 0 ? 150 : 300}
+              alt="mouse"
+            />
+            <Form.Label style={{ color: "#f7f7f7" }}>Ваши данные</Form.Label>
             <Form.Control
               className="mb-3 border-secondary"
               value={email}
@@ -157,7 +206,7 @@ const UserProfile = observer(() => {
               disabled={!isEditing}
               style={{ background: "#27282a", color: "#f7f7f7" }}
             />
-            <Form.Label style={{ color: "#f7f7f7" }}>Имя:</Form.Label>
+            {/* <Form.Label style={{ color: "#f7f7f7" }}>Имя:</Form.Label> */}
             <Form.Control
               className="mb-3 border-secondary"
               value={name}
@@ -165,7 +214,7 @@ const UserProfile = observer(() => {
               disabled={!isEditing}
               style={{ background: "#27282a", color: "#f7f7f7" }}
             />
-            <Form.Label style={{ color: "#f7f7f7" }}>Телефон:</Form.Label>
+            {/* <Form.Label style={{ color: "#f7f7f7" }}>Телефон:</Form.Label> */}
             <InputMask
               mask="+375 (99) 999-99-99"
               value={phone}
@@ -181,7 +230,7 @@ const UserProfile = observer(() => {
                 />
               )}
             </InputMask>
-            <Form.Label style={{ color: "#f7f7f7" }}>Размер одежды:</Form.Label>
+            {/* <Form.Label style={{ color: "#f7f7f7" }}>Размер одежды:</Form.Label>
             <Form.Select
               className="mb-4 border-secondary"
               value={size}
@@ -195,7 +244,7 @@ const UserProfile = observer(() => {
               <option value="M">M (46)</option>
               <option value="L">L (48)</option>
               <option value="XL">XL (50)</option>
-            </Form.Select>
+            </Form.Select> */}
             <div className="d-flex justify-content-between mb-4">
               <Button variant="outline-light" onClick={handleLogout}>
                 Выйти
@@ -215,46 +264,163 @@ const UserProfile = observer(() => {
             </div>
           </Form>
 
-          <ul className="mt-2" style={{ color: "#ccc" }}>
+          <div
+            style={{
+              width: "50%",
+              minWidth: "350px",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "flex-start",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                marginBottom: "20px",
+                width: "100%",
+              }}
+            ></div>
+
             {comments.length > 0 ? (
-              comments.map((comment, idx) => (
-                <li key={idx} style={{ marginBottom: "0.5rem" }}>
-                  <b>{comment.pattern}</b> — Оценка: {comment.rating}
-                  <br />
-                  {comment.comment}
-                </li>
-              ))
+              <div style={{ width: "100%" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <h4 style={{ color: "#f7f7f7", marginBottom: "15px" }}>
+                    Ваши отзывы
+                  </h4>
+                  <Button
+                    variant="outline-light"
+                    onClick={handleShow}
+                    className="mt-2 mb-3"
+                    style={{ width: "200px" }}
+                  >
+                    Добавить отзыв
+                  </Button>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "15px",
+                    width: "100%",
+                    maxHeight: "650px",
+                    overflowY: "auto",
+                    paddingRight: "10px",
+                  }}
+                  className="custom-scroll"
+                >
+                  {comments.map((comment, idx) => (
+                    <div
+                      key={idx}
+                      style={{
+                        padding: "15px",
+                        border: "1px solid #444",
+                        borderRadius: "10px",
+                        backgroundColor: "rgba(39, 40, 42, 0.7)",
+                      }}
+                    >
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "flex-start",
+                          marginBottom: "10px",
+                        }}
+                      >
+                        {patternImages[comment.patternId] && (
+                          <img
+                            src={
+                              process.env.REACT_APP_API_URL +
+                              "/" +
+                              patternImages[comment.patternId]
+                            }
+                            alt={comment.pattern}
+                            style={{
+                              width: "100px",
+                              height: "120px",
+                              marginTop: "10px",
+                              objectFit: "cover",
+                              marginRight: "15px",
+                              borderRadius: "5px",
+                            }}
+                          />
+                        )}
+                        <div>
+                          <h5 style={{ color: "#f7f7f7", marginBottom: "5px" }}>
+                            {comment.pattern}
+                          </h5>
+                          <div
+                            style={{
+                              display: "flex",
+                              flexDirection: "column",
+                              color: "#aaa",
+                            }}
+                          >
+                            <span style={{ marginRight: "10px" }}>
+                              Оценка: {comment.rating}
+                            </span>
+                            <span>Дата отзыва: {comment.date}</span>
+                          </div>
+                          {orderDetails[comment.patternId] && (
+                            <div style={{ fontSize: "0.9em", color: "#aaa" }}>
+                              <div>
+                                Дата покупки:{" "}
+                                {new Date(
+                                  orderDetails[comment.patternId].date
+                                ).toLocaleDateString()}
+                              </div>
+                              <div>
+                                Цена: {orderDetails[comment.patternId].price}{" "}
+                                BYN
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      <p
+                        style={{
+                          margin: "0",
+                          paddingTop: "10px",
+                          borderTop: "1px solid #555",
+                          color: "#fff",
+                        }}
+                      >
+                        {comment.comment}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
             ) : (
-              <div style={{ textAlign: 'center' }}>
-                <img src={mouse} width={300} alt="mouse" />
+              <div style={{ textAlign: "center", width: "100%" }}>
                 <p>Вы ещё не оставляли отзывов.</p>
-                <Button variant="outline-light" onClick={handleShow} className="mb-2">
-                  Добавить отзыв
-                </Button>
-                {comments.length > 0 && (
-                  <div>
-                    <Link to={REVIEWS_ROUTE} style={{ color: '#f7f7f7', textDecoration: 'none' }}>
-                      Перейти на страницу отзывов
-                    </Link>
-                  </div>
-                )}
               </div>
             )}
-          </ul>
+          </div>
         </div>
       </div>
       <Modal show={showModal} onHide={handleClose} centered>
-        <Modal.Header closeButton style={{ background: '#27282a', color: '#f7f7f7', border: 'none' }}>
+        <Modal.Header
+          closeButton
+          style={{ background: "#27282a", color: "#f7f7f7", border: "none" }}
+        >
           <Modal.Title>Добавить отзыв</Modal.Title>
         </Modal.Header>
-        <Modal.Body style={{ background: '#27282a', color: '#f7f7f7' }}>
+        <Modal.Body style={{ background: "#27282a", color: "#f7f7f7" }}>
           <Form onSubmit={handleReviewSubmit}>
             <Form.Group className="mb-3">
               <Form.Label>Выберите товар:</Form.Label>
               <Form.Select
                 name="patternId"
                 required
-                style={{ background: '#27282a', color: '#f7f7f7' }}
+                style={{ background: "#27282a", color: "#f7f7f7" }}
                 onChange={(e) => {
                   const patternId = e.target.value;
                   setSelectedPatternId(patternId);
@@ -269,7 +435,7 @@ const UserProfile = observer(() => {
                 ))}
               </Form.Select>
               {selectedPatternId && !canReview && (
-                <div style={{ color: '#ff6b6b', marginTop: '0.5rem' }}>
+                <div style={{ color: "#ff6b6b", marginTop: "0.5rem" }}>
                   Отзыв можно оставить только на товары из завершённых заказов
                 </div>
               )}
@@ -282,7 +448,7 @@ const UserProfile = observer(() => {
                 required
                 value={rating}
                 onChange={(e) => setRating(e.target.value)}
-                style={{ background: '#27282a', color: '#f7f7f7' }}
+                style={{ background: "#27282a", color: "#f7f7f7" }}
               >
                 <option value="">___</option>
                 <option value="5">5</option>
@@ -301,12 +467,16 @@ const UserProfile = observer(() => {
                 required
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
-                style={{ background: '#27282a', color: '#f7f7f7' }}
+                style={{ background: "#27282a", color: "#f7f7f7" }}
               />
             </Form.Group>
 
             <div className="d-flex justify-content-end">
-              <Button variant="secondary" onClick={handleClose} className="me-2">
+              <Button
+                variant="secondary"
+                onClick={handleClose}
+                className="me-2"
+              >
                 Отмена
               </Button>
               <Button

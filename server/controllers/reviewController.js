@@ -218,6 +218,30 @@ class ReviewController {
       return res.status(500).json({ message: "Ошибка сервера", error: error.message });
     }
   }
+
+  async getPatternReviews(req, res) {
+    try {
+      const { patternId } = req.params;
+      const reviews = await Review.findAll({
+        where: { 
+          patternId: patternId,
+          status: 'APPROVED' // Только одобренные отзывы
+        },
+        attributes: ['id', 'rating', 'comment', 'date'],
+        include: [
+          { 
+            model: User,
+            attributes: ['id', 'name']
+          }
+        ],
+        order: [['date', 'DESC']] // Сортировка по дате (новые сначала)
+      });
+      return res.json(reviews);
+    } catch (e) {
+      console.error("Ошибка при получении отзывов для паттерна:", e);
+      res.status(500).json({ message: "Ошибка при получении отзывов", error: e.message });
+    }
+  }
 }
 
 module.exports = new ReviewController();

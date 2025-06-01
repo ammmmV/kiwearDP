@@ -8,10 +8,22 @@ class PatternController {
         try {
 
             let {name, price, fabricId, typeId, description} = req.body
-            const {img} = req.files
+            const { img, pdf } = req.files
+
             let fileName = uuid.v4() + ".jpg"
-            img.mv(path.resolve(__dirname, '..', 'static', fileName))
-            const pattern = await Pattern.create({name, price, fabricId, typeId, img: fileName, description});
+            let imagePath = path.join('images', fileName)
+            console.log(imagePath)
+            img.mv(path.resolve(__dirname, '..', 'static', imagePath))
+            
+            let pdfFileName = null
+            let pdfPath = null
+            if (pdf) { 
+                pdfFileName = uuid.v4() + ".pdf"
+                pdfPath = path.join('pdfs', pdfFileName)
+                pdf.mv(path.resolve(__dirname, '..', 'static', pdfPath))
+            }
+
+            const pattern = await Pattern.create({name, price, fabricId, typeId, img: imagePath, pdf:pdfPath, description});
             
             return res.json(pattern)
         } catch (e) {

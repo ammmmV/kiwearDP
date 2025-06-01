@@ -266,6 +266,17 @@
     border-radius: 20px;
 }
 
+.modal-content {
+    border-radius: 15px !important; /* Важно: Bootstrap может переопределять, используйте !important при необходимости */
+    overflow: hidden; /* Обрезает контент, если он выходит за рамки скругленных углов */
+}
+
+/* Пример для ширины модала */
+.modal-90w .modal-dialog {
+    max-width: 900px; /* Или любая другая ширина */
+    width: 90%;
+}
+
 
 .custom-scroll::-webkit-scrollbar {
     width: 8px;

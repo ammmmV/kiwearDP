@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Context } from "../../index";
 import { Modal, Button, Image } from "react-bootstrap";
 import styled from "styled-components";
+import { fetchHeaderData } from '../../http/userAPI';
 import { fetchPatternReviews } from "../../http/reviewAPI";
 
 const StyledModal = styled(Modal)`
@@ -96,10 +97,17 @@ const ItemModal = ({ show, onHide, item, type }) => {
         return;
       }
 
-      await basket.addToBasket({
-        patternId: item.id
-      });
-      onHide();
+        await basket.addToBasket({
+            patternId: item.id
+        });
+        onHide();
+        const headerData = await fetchHeaderData();
+        if (headerData) {
+            user.setBasketCount(headerData.basketCount);
+        } else {
+            console.warn("Не удалось получить данные для шапки, сбрасываю счетчик корзины.");
+            user.setBasketCount(0);
+        }
     } catch (error) {
       console.error("Ошибка при добавлении в корзину:", error);
       alert("Произошла ошибка при добавлении товара в корзину");

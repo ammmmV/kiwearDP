@@ -12,5 +12,6 @@ router.get('/profileData', userController.getCurrentUser);
 router.delete('/:id', userController.deleteUser)
 router.put('/:id/role', userController.updateRole)
 router.put('/update', authMiddleware, userController.updateUser);
+router.get('/header-data', authMiddleware, userController.getHeaderData);
 
 module.exports = router

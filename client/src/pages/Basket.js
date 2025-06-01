@@ -4,6 +4,7 @@ import { observer } from "mobx-react-lite";
 import { Context } from "../index";
 import InputMask from "react-input-mask";
 import styled from "styled-components";
+import { fetchHeaderData } from '../http/userAPI';
 import "../styles/Style.css";
 
 const StyledContainer = styled(Container)`
@@ -203,7 +204,7 @@ const Basket = observer(() => {
     };
 
     loadBasket();
-}, [user.isAuth, user.user?.email]);
+  }, [user.isAuth, user.user?.email]);
 
   const handleOrderInput = (e) => {
     const { name, value, type, checked } = e.target;
@@ -213,13 +214,39 @@ const Basket = observer(() => {
     }));
   };
 
-  const removeFromBasket = (id) => {
-    basket.removeFromBasket(id);
+  const removeFromBasket = async (id) => { // <--- СДЕЛАЛИ АСИНХРОННОЙ ФУНКЦИЕЙ
+    try {
+      await basket.removeFromBasket(id); // Дожидаемся завершения удаления из корзины
+
+      const headerData = await fetchHeaderData();
+      if (headerData) {
+        user.setBasketCount(headerData.basketCount); // Обновляем значение в UserStore
+      } else {
+        console.warn("Не удалось получить данные для шапки после удаления, сбрасываю счетчик корзины.");
+        user.setBasketCount(0);
+      }
+    } catch (error) {
+      console.error("Ошибка при удалении из корзины:", error);
+      alert("Произошла ошибка при удалении товара из корзины");
+    }
   };
 
-  const updateQuantity = (id, quantity) => {
-    if (quantity < 1) return;
-    basket.updateQuantity(id, quantity);
+
+  const updateQuantity = async (id, quantity) => {
+    try {
+      if (quantity < 1) return;
+      await basket.updateQuantity(id, quantity);
+      const headerData = await fetchHeaderData();
+      if (headerData) {
+        user.setBasketCount(headerData.basketCount); // Обновляем значение в UserStore
+      } else {
+        console.warn("Не удалось получить данные для шапки после удаления, сбрасываю счетчик корзины.");
+        user.setBasketCount(0);
+      }
+    } catch (error) {
+      console.error("Ошибка при изменении количества:", error);
+      alert("Произошла ошибка при изменении количества");
+    }
   };
 
   const handleOrder = () => {
@@ -274,13 +301,14 @@ const Basket = observer(() => {
       };
 
       const orderResponse = await order.createOrder(payload);
-      
+
       if (orderResponse) {
         try {
           await basket.clearBasket();
+          user.setBasketCount(0);
           setShowConfirmModal(false);
           setShowSuccessModal(true);
-      
+
           setTimeout(() => {
             setShowSuccessModal(false);
             window.location.href = "/orders";
@@ -294,7 +322,7 @@ const Basket = observer(() => {
       console.error("Ошибка при оформлении заказа:", err);
       alert(
         err.response?.data?.message ||
-          "Произошла ошибка при оформлении заказа. Пожалуйста, попробуйте позже."
+        "Произошла ошибка при оформлении заказа. Пожалуйста, попробуйте позже."
       );
     }
   };
@@ -309,9 +337,8 @@ const Basket = observer(() => {
         <>
           {basket.basket.map((item) => (
             <BasketItem
-              key={`${item.id || item.patternId}-${item.typeId}-${
-                item.fabricId
-              }`}
+              key={`${item.id || item.patternId}-${item.typeId}-${item.fabricId
+                }`}
             >
               <ImageContainer>
                 <img
@@ -409,7 +436,7 @@ const Basket = observer(() => {
           <FormGroup>
             <Form.Label>Имя держателя карты</Form.Label>
             <Form.Control
-            placeholder="WILL SMITH"
+              placeholder="WILL SMITH"
               type="text"
               name="cardOwner"
               value={orderData.cardOwner}
@@ -451,7 +478,7 @@ const Basket = observer(() => {
           <FormGroup>
             <Form.Label>Примечания</Form.Label>
             <Form.Control
-            placeholder="Дополнительные сведения..."
+              placeholder="Дополнительные сведения..."
               as="textarea"
               rows={3}
               name="notes"

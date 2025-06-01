@@ -1,17 +1,53 @@
 const ApiError = require('../error/ApiError')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const { User, Basket } = require('../models/models')
+const { User, Basket, BasketItem } = require('../models/models')
 
-const generateJwt = (id, email, role, name, phone) => {
+const generateJwt = (id, email, role, name, phone, basketCount = 0) => {
     return jwt.sign(
-        { id, email, role, name, phone },
+        { id, email, role, name, phone, basketCount },
         process.env.SECRET_KEY,
         { expiresIn: '24h' }
     )
 }
 
 class UserController {
+
+    constructor() {
+        // Привязываем каждый метод к экземпляру класса
+        // Это гарантирует, что 'this' внутри этих методов будет ссылаться на UserControler
+        this.registration = this.registration.bind(this);
+        this.login = this.login.bind(this);
+        this.check = this.check.bind(this);
+        this.getHeaderData = this.getHeaderData.bind(this);
+        this.getUsers = this.getUsers.bind(this);
+        this.getCurrentUser = this.getCurrentUser.bind(this);
+        this.deleteUser = this.deleteUser.bind(this);
+        this.updateRole = this.updateRole.bind(this);
+        this.updateUser = this.updateUser.bind(this);
+        // _getBasketItemCount не привязываем, так как она вызывается через 'this.'
+        // Если бы она была статической, то bind был бы не нужен.
+        // Если она не статическая, то this._getBasketItemCount() будет работать,
+        // потому что методы, вызывающие ее (например, getHeaderData), уже привязаны.
+    }
+
+    async _getBasketItemCount(userId) {
+        if (!userId) {
+            return 0;
+        }
+        const basket = await Basket.findOne({
+            where: { userId },
+            include: [{
+                model: BasketItem,
+                attributes: ['quantity']
+            }]
+        });
+
+        if (basket && basket.basket_items) {
+            return basket.basket_items.reduce((total, item) => total + item.quantity, 0);
+        }
+        return 0;
+    }
 
     async registration(req, res, next) {
         try {
@@ -31,7 +67,12 @@ class UserController {
                 role,
                 password: hashPassword
             })
-            const token = generateJwt(user.id, user.email, user.role, user.name, user.phone)
+
+            await Basket.create({ userId: user.id });
+
+            const basketCount = await this._getBasketItemCount(user.id);
+
+            const token = generateJwt(user.id, user.email, user.role, user.name, user.phone, basketCount); 
             return res.json({ token })
         } catch (error) {
             return next(ApiError.internal('Ошибка при регистрации пользователя'))
@@ -48,7 +89,9 @@ class UserController {
         if (!comparePassword) {
             return next(ApiError.internal('Указан неверный пароль'))
         }
-        const token = generateJwt(user.id, user.email, user.role, user.name, user.phone)
+        const basketCount = await this._getBasketItemCount(user.id);
+
+        const token = generateJwt(user.id, user.email, user.role, user.name, user.phone, basketCount);  
         return res.json({ token })
     }
 
@@ -78,13 +121,16 @@ class UserController {
     }    
 
     async check(req, res, next) {
+        // const basketCount = await this._getBasketItemCount(req.user.id);
+
         const token = generateJwt(
-            req.user.id, 
-            req.user.email, 
-            req.user.role, 
-            req.user.name, 
-            req.user.phone
-        )
+            req.user.id,
+            req.user.email,
+            req.user.role,
+            req.user.name,
+            req.user.phone,
+            // basketCount
+        );
         return res.json({ token })
     }
 
@@ -152,6 +198,27 @@ class UserController {
             });
         } catch (error) {
             return next(ApiError.internal('Ошибка при обновлении данных пользователя'));
+        }
+    }
+
+    async getHeaderData(req, res, next) {
+        try {
+            const userId = req.user.id;
+            const user = await User.findByPk(userId);
+
+            if (!user) {
+                return next(ApiError.notFound('Пользователь не найден'));
+            }
+
+            const basketCount = await this._getBasketItemCount(userId);
+
+            return res.json({
+                name: user.name,
+                basketCount: basketCount
+            });
+        } catch (e) {
+            console.error("Error fetching header data:", e);
+            return next(ApiError.internal('Ошибка при получении данных для шапки: ' + e.message));
         }
     }
 }

@@ -60,3 +60,13 @@ export const updateUser = async (userData) => {
     const { data } = await $authHost.put('api/user/update', userData);
     return data;
 }
+
+export const fetchHeaderData = async () => {
+    try {
+        const { data } = await $authHost.get('api/user/header-data');
+        return data;
+    } catch (e) {
+        console.error("Failed to fetch header data:", e.response?.data?.message || e.message);
+        return null;
+    }
+};

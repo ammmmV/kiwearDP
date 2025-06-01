@@ -5,6 +5,7 @@ export default class UserStore {
         this._isAuth = false
         this._user = {}
         this._role = {}
+        this._basketCount = 0;        
         makeAutoObservable(this)
     }
 
@@ -13,9 +14,16 @@ export default class UserStore {
     }
     setUser(user) {
         this._user = user
+        if (user && typeof user.basketCount === 'number') {
+            this.setBasketCount(user.basketCount);
+        }
     }
     setRole(role) {
         this._role = role
+    }
+
+    setBasketCount(count) {
+        this._basketCount = count;
     }
 
     get isAuth() {
@@ -26,5 +34,8 @@ export default class UserStore {
     }
     get role() {
         return this._role
+    }
+    get basketCount() { 
+        return this._basketCount;
     }
 }

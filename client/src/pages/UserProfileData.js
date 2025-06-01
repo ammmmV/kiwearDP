@@ -82,6 +82,7 @@ const UserProfile = observer(() => {
 
     fetchOrderedPatterns();
 
+    // В методе loadUserReviews (примерно строка 70-80)
     const loadUserReviews = async () => {
       try {
         await review.loadUserReviews();
@@ -93,6 +94,7 @@ const UserProfile = observer(() => {
             rating: review.rating,
             comment: review.comment,
             date: new Date(review.date).toLocaleDateString(),
+            status: review.status // Добавляем статус
           }))
         );
       } catch (error) {

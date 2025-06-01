@@ -10,7 +10,6 @@ import { LOGIN_ROUTE } from "../utils/consts";
 import mouse from "../assets/mouse.png";
 import "../styles/Style.css";
 import { createReview } from "../http/reviewAPI";
-import { Link } from "react-router-dom";
 import { REVIEWS_ROUTE } from "../utils/consts";
 
 const UserProfile = observer(() => {
@@ -29,8 +28,6 @@ const UserProfile = observer(() => {
   const [comment, setComment] = useState("");
   const [patternImages, setPatternImages] = useState({});
   const [orderDetails, setOrderDetails] = useState({});
-
-  // const [selectedPattern, setSelectedPattern] = useState(null);
   const [canReview, setCanReview] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
@@ -84,20 +81,24 @@ const UserProfile = observer(() => {
     const loadUserReviews = async () => {
       try {
         await review.loadUserReviews();
-        if (Array.isArray(review.userReviews) && review.userReviews.length > 0) {
+        if (
+          Array.isArray(review.userReviews) &&
+          review.userReviews.length > 0
+        ) {
           setComments(
             review.userReviews.map((review) => ({
               id: review.id,
               patternId: review.pattern?.id,
-              pattern: review.pattern?.name || 'Неизвестный товар',
+              pattern: review.pattern?.name || "Неизвестный товар",
               rating: review.rating,
               comment: review.comment,
-              date: review.date ? new Date(review.date).toLocaleDateString() : 'Дата не указана',
-              status: review.status || 'PENDING'
+              date: review.date
+                ? new Date(review.date).toLocaleDateString()
+                : "Дата не указана",
+              status: review.status || "PENDING",
             }))
           );
         } else {
-          console.log("Отзывы пользователя отсутствуют или имеют неверный формат:", review.userReviews);
           setComments([]);
         }
       } catch (error) {
@@ -129,10 +130,6 @@ const UserProfile = observer(() => {
         ...user.user,
         ...updatedData,
       });
-      setEmail(updatedData.email);
-      setPhone(updatedData.phone);
-      setSize(updatedData.size);
-      setName(updatedData.name);
       setIsEditing(false);
       alert("Данные успешно обновлены!");
     } catch (error) {
@@ -154,7 +151,6 @@ const UserProfile = observer(() => {
       setComment("");
       alert("Отзыв успешно отправлен!");
     } catch (error) {
-      console.error("Ошибка при отправке отзыва:", error);
       alert(error.response?.data?.message || "Ошибка при отправке отзыва");
     }
   };
@@ -185,8 +181,10 @@ const UserProfile = observer(() => {
           style={{
             display: "flex",
             flexDirection: "row",
-            maxWidth: comments.length > 0 ? "1200px" : "900px",
-            width: comments.length > 0 ? "90%" : "80%",
+            alignItems: "flex-start",
+            maxWidth: "1200px",
+            width: "90%",
+            gap: "20px",
           }}
         >
           <Form
@@ -195,18 +193,8 @@ const UserProfile = observer(() => {
               flexDirection: "column",
               width: "30%",
               minWidth: "350px",
-              marginRight: "20px",
             }}
           >
-            {comments.length > 0 && <img src={mouse} width={150} alt="mouse" />}
-            {/* <Button
-              variant="outline-light"
-              onClick={handleShow}
-              className="mt-2 mb-3"
-              style={{ width: "200px" }}
-            >
-              Добавить отзыв
-            </Button> */}
             <Form.Label style={{ color: "#f7f7f7" }}>Ваши данные</Form.Label>
             <Form.Control
               className="mb-3 border-secondary"
@@ -215,7 +203,6 @@ const UserProfile = observer(() => {
               disabled={!isEditing}
               style={{ background: "#27282a", color: "#f7f7f7" }}
             />
-            {/* <Form.Label style={{ color: "#f7f7f7" }}>Имя:</Form.Label> */}
             <Form.Control
               className="mb-3 border-secondary"
               value={name}
@@ -223,7 +210,6 @@ const UserProfile = observer(() => {
               disabled={!isEditing}
               style={{ background: "#27282a", color: "#f7f7f7" }}
             />
-            {/* <Form.Label style={{ color: "#f7f7f7" }}>Телефон:</Form.Label> */}
             <InputMask
               mask="+375 (99) 999-99-99"
               value={phone}
@@ -239,21 +225,6 @@ const UserProfile = observer(() => {
                 />
               )}
             </InputMask>
-            {/* <Form.Label style={{ color: "#f7f7f7" }}>Размер одежды:</Form.Label>
-            <Form.Select
-              className="mb-4 border-secondary"
-              value={size}
-              onChange={(e) => setSize(e.target.value)}
-              disabled={!isEditing}
-              style={{ background: "#27282a", color: "#f7f7f7" }}
-            >
-              <option value="">Выберите размер</option>
-              <option value="XS">XS (42)</option>
-              <option value="S">S (44)</option>
-              <option value="M">M (46)</option>
-              <option value="L">L (48)</option>
-              <option value="XL">XL (50)</option>
-            </Form.Select> */}
             <div className="d-flex justify-content-between mb-4">
               <Button variant="outline-light" onClick={handleLogout}>
                 Выйти
@@ -275,40 +246,49 @@ const UserProfile = observer(() => {
 
           <div
             style={{
-              width: "50%",
-              minWidth: "350px",
+              flex: 1,
+              minHeight: "100%",
               display: "flex",
               flexDirection: "column",
-              alignItems: "flex-start",
+              alignItems: "center",
+              paddingTop: "10px",
             }}
           >
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                marginBottom: "20px",
-                width: "100%",
-              }}
-            ></div>
-
-            {comments.length > 0 ? (
-              <div style={{ width: "100%" }}>
+            {comments.length === 0 ? (
+              <div
+                style={{
+                  textAlign: "center",
+                  color: "#f7f7f7",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
+                <img
+                  src={mouse}
+                  alt="mouse"
+                  width={200}
+                  style={{ marginBottom: "20px" }}
+                />
+                <p style={{ fontSize: "1.2rem" }}>Отзывов пока что нет</p>
+                <Button variant="outline-light" onClick={handleShow}>
+                  Добавить отзыв
+                </Button>
+              </div>
+            ) : (
+              <>
                 <div
                   style={{
                     display: "flex",
-                    flexDirection: "row",
                     justifyContent: "space-between",
-                    alignItems: "center",
+                    width: "100%",
+                    marginBottom: "15px",
                   }}
                 >
-                  <h4 style={{ color: "#f7f7f7", marginBottom: "15px" }}>
-                    Ваши отзывы
-                  </h4>
+                  <h4 style={{ color: "#f7f7f7" }}>Ваши отзывы</h4>
                   <Button
                     variant="outline-light"
                     onClick={handleShow}
-                    className="mt-2 mb-3"
                     style={{ width: "200px" }}
                   >
                     Добавить отзыв
@@ -336,13 +316,7 @@ const UserProfile = observer(() => {
                         backgroundColor: "rgba(39, 40, 42, 0.7)",
                       }}
                     >
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "flex-start",
-                          marginBottom: "10px",
-                        }}
-                      >
+                      <div style={{ display: "flex", marginBottom: "10px" }}>
                         {patternImages[comment.patternId] && (
                           <img
                             src={
@@ -354,7 +328,6 @@ const UserProfile = observer(() => {
                             style={{
                               width: "120px",
                               height: "140px",
-                              marginTop: "20px",
                               objectFit: "cover",
                               marginRight: "15px",
                               borderRadius: "5px",
@@ -362,21 +335,13 @@ const UserProfile = observer(() => {
                           />
                         )}
                         <div>
-                          <h5 style={{ color: "#f7f7f7", marginBottom: "5px" }}>
+                          <h5 style={{ color: "#f7f7f7" }}>
                             {comment.pattern}
                           </h5>
-                          <div
-                            style={{
-                              display: "flex",
-                              flexDirection: "column",
-                              color: "#aaa",
-                            }}
-                          >
-                            <span style={{ marginRight: "10px" }}>
-                              Оценка: {comment.rating}
-                            </span>
-                            <span>Дата отзыва: {comment.date}</span>
-                            <span
+                          <div style={{ color: "#aaa" }}>
+                            <div>Оценка: {comment.rating}</div>
+                            <div>Дата отзыва: {comment.date}</div>
+                            <div
                               style={{
                                 color:
                                   comment.status === "APPROVED"
@@ -392,22 +357,22 @@ const UserProfile = observer(() => {
                                 : comment.status === "REJECTED"
                                 ? "Отклонен"
                                 : "На рассмотрении"}
-                            </span>
-                          </div>
-                          {orderDetails[comment.patternId] && (
-                            <div style={{ fontSize: "0.9em", color: "#aaa" }}>
-                              <div>
-                                Дата покупки:{" "}
-                                {new Date(
-                                  orderDetails[comment.patternId].date
-                                ).toLocaleDateString()}
-                              </div>
-                              <div>
-                                Цена: {orderDetails[comment.patternId].price}{" "}
-                                BYN
-                              </div>
                             </div>
-                          )}
+                            {orderDetails[comment.patternId] && (
+                              <>
+                                <div>
+                                  Дата покупки:{" "}
+                                  {new Date(
+                                    orderDetails[comment.patternId].date
+                                  ).toLocaleDateString()}
+                                </div>
+                                <div>
+                                  Цена: {orderDetails[comment.patternId].price}{" "}
+                                  BYN
+                                </div>
+                              </>
+                            )}
+                          </div>
                         </div>
                       </div>
                       <p
@@ -423,15 +388,12 @@ const UserProfile = observer(() => {
                     </div>
                   ))}
                 </div>
-              </div>
-            ) : (
-              <div style={{ textAlign: "center", width: "100%" }}>
-                <p>Вы ещё не оставляли отзывов.</p>
-              </div>
+              </>
             )}
           </div>
         </div>
       </div>
+
       <Modal show={showModal} onHide={handleClose} centered>
         <Modal.Header
           closeButton
@@ -444,7 +406,6 @@ const UserProfile = observer(() => {
             <Form.Group className="mb-3">
               <Form.Label>Выберите товар:</Form.Label>
               <Form.Select
-                name="patternId"
                 required
                 style={{ background: "#27282a", color: "#f7f7f7" }}
                 onChange={(e) => {
@@ -466,37 +427,32 @@ const UserProfile = observer(() => {
                 </div>
               )}
             </Form.Group>
-
             <Form.Group className="mb-3">
               <Form.Label>Оценка:</Form.Label>
               <Form.Select
-                name="rating"
                 required
                 value={rating}
                 onChange={(e) => setRating(e.target.value)}
                 style={{ background: "#27282a", color: "#f7f7f7" }}
               >
                 <option value="">___</option>
-                <option value="5">5</option>
-                <option value="4">4</option>
-                <option value="3">3</option>
-                <option value="2">2</option>
-                <option value="1">1</option>
+                {[5, 4, 3, 2, 1].map((num) => (
+                  <option key={num} value={num}>
+                    {num}
+                  </option>
+                ))}
               </Form.Select>
             </Form.Group>
-
             <Form.Group className="mb-3">
               <Form.Label>Ваш отзыв:</Form.Label>
               <Form.Control
                 as="textarea"
-                name="comment"
                 required
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
                 style={{ background: "#27282a", color: "#f7f7f7" }}
               />
             </Form.Group>
-
             <div className="d-flex justify-content-end">
               <Button
                 variant="secondary"

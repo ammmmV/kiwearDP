@@ -68,7 +68,8 @@ const Review = sequelize.define('review', {
     userId: { type: DataTypes.INTEGER, allowNull: false },
     date: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
     rating: { type: DataTypes.INTEGER, allowNull: false },
-    comment: { type: DataTypes.TEXT, allowNull: false }
+    comment: { type: DataTypes.TEXT, allowNull: false },
+    status: { type: DataTypes.STRING, defaultValue: 'PENDING' }
 });
 
 

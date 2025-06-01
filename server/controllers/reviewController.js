@@ -72,7 +72,7 @@ class ReviewController {
   async getAll(req, res) {
     try {
       const reviews = await Review.findAll({
-        attributes: ['id', 'rating', 'comment', 'date'],
+        attributes: ['id', 'rating', 'comment', 'date', 'status'],
         include: [
           { 
             model: Pattern,
@@ -82,8 +82,67 @@ class ReviewController {
             model: User,
             attributes: ['id', 'email']
           }
-        ]
+        ],
+        where: { status: 'APPROVED' } 
       });
+      return res.json(reviews);
+    } catch (e) {
+      console.error("Ошибка при получении отзывов:", e);
+      res
+        .status(500)
+        .json({ message: "Ошибка при получении отзывов", error: e.message });
+    }
+  }
+
+  async getAllForAdmin(req, res) {
+    try {
+      const { search, rating, status } = req.query;
+      
+      // Базовые условия поиска
+      const whereConditions = {};
+      
+      // Добавление фильтра по статусу, если указан
+      if (status) {
+        whereConditions.status = status;
+      }
+      
+      // Добавление фильтра по рейтингу, если указан
+      if (rating) {
+        whereConditions.rating = parseInt(rating);
+      }
+      
+      const reviews = await Review.findAll({
+        attributes: ['id', 'rating', 'comment', 'date', 'status'],
+        where: whereConditions,
+        include: [
+          { 
+            model: Pattern,
+            attributes: ['id', 'name'],
+            // Поиск по названию товара, если указан поисковый запрос
+            ...(search && {
+              where: {
+                name: {
+                  [Op.like]: `%${search}%`
+                }
+              }
+            })
+          },
+          { 
+            model: User,
+            attributes: ['id', 'email']
+          }
+        ],
+        // Поиск по комментарию, если указан поисковый запрос
+        ...(search && {
+          where: {
+            ...whereConditions,
+            comment: {
+              [Op.like]: `%${search}%`
+            }
+          }
+        })
+      });
+      
       return res.json(reviews);
     } catch (e) {
       console.error("Ошибка при получении отзывов:", e);
@@ -117,7 +176,7 @@ class ReviewController {
       const userId = req.user.id;
       const reviews = await Review.findAll({
         where: { userId: userId },
-        attributes: ['id', 'rating', 'comment', 'date'],
+        attributes: ['id', 'rating', 'comment', 'date', 'status'],
         include: [
           { 
             model: Pattern,
@@ -125,12 +184,38 @@ class ReviewController {
           }
         ]
       });
+      console.log("Отправляем отзывы пользователя:", JSON.stringify(reviews));
       return res.json(reviews);
     } catch (e) {
       console.error("Ошибка при получении отзывов пользователя:", e);
       res
         .status(500)
         .json({ message: "Ошибка при получении отзывов", error: e.message });
+    }
+  }
+
+
+  async updateReviewStatus(req, res) {
+    try {
+      const { id } = req.params;
+      const { status } = req.body;
+      
+      if (!['PENDING', 'APPROVED', 'REJECTED'].includes(status)) {
+        return res.status(400).json({ message: "Недопустимый статус отзыва" });
+      }
+      
+      const review = await Review.findByPk(id);
+      if (!review) {
+        return res.status(404).json({ message: "Отзыв не найден" });
+      }
+      
+      review.status = status;
+      await review.save();
+      
+      return res.json(review);
+    } catch (error) {
+      console.error("Ошибка при обновлении статуса отзыва:", error);
+      return res.status(500).json({ message: "Ошибка сервера", error: error.message });
     }
   }
 }

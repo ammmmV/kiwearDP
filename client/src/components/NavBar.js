@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import { Context } from "../index";
 import Navbar from "react-bootstrap/Navbar";
-import {  Dropdown } from "react-bootstrap";
+import { Dropdown } from "react-bootstrap";
 import Nav from "react-bootstrap/Nav";
 import { NavLink, useLocation } from "react-router-dom";
 import {
@@ -81,19 +81,14 @@ const NavBar = observer(() => {
     { label: "Каталог", path: SHOP_ROUTE },
     { label: "Корзина", path: BASKET_ROUTE },
     { label: "Личный кабинет", path: USER_PROFILE_DATA_ROUTE },
-    { label: "Заказы", path: ORDERS_ROUTE },
+    { label: "Мои Заказы", path: ORDERS_ROUTE },
     { label: "Отзывы", path: REVIEWS_ROUTE }
   ];
 
   const adminNavItems = [
-    { label: "Каталог", path: SHOP_ROUTE },
-    { label: "Корзина", path: BASKET_ROUTE },
-    { label: "Личный кабинет", path: USER_PROFILE_DATA_ROUTE },
-    { label: "Заказы", path: ORDERS_ROUTE },
-    { label: "Отзывы", path: REVIEWS_ROUTE },
-    { label: "Лекала", path: PATTERNS_FIX_ROUTE },
-    { label: "Заказы", path: ADMIN_ORDERS_ROUTE },
-    { label: "Отзывы", path: ADMIN_REVIEWS_ROUTE },
+    { label: "Ассортимент лекала", path: PATTERNS_FIX_ROUTE },
+    { label: "Заказы пользователей", path: ADMIN_ORDERS_ROUTE },
+    { label: "Отзывы пользователей", path: ADMIN_REVIEWS_ROUTE },
     { label: "Пользователи", path: USERS_FIX_ROUTE }
   ];
 
@@ -120,15 +115,18 @@ const NavBar = observer(() => {
             style={{ marginRight: "10px", cursor: "pointer" }}
             onClick={() => history(SHOP_ROUTE)}
           />
-          <span 
-            style={{ 
-              color: "white", 
-              fontSize: "34px", 
-              cursor: "pointer" 
+          <span
+            style={{
+              color: "white",
+              fontSize: "32px",
+              cursor: "pointer",
+              fontStyle: "italic"
             }}
             onClick={() => history(SHOP_ROUTE)}
           >
-            KiWear
+          <span>k</span>
+          <span style={{color: "#267b54", fontSize: "33px", fontWeight: "bold"}}>i</span>
+            Wear
           </span>
           {currentPageTitle && (
             <span
@@ -181,7 +179,7 @@ const NavBar = observer(() => {
                 )}
                 {user.isAuth && (
                   <>
-                    {user.user.role === "USER" && 
+                    {user.user.role === "USER" &&
                       userNavItems.map(({ label, path }) => (
                         <li key={path}>
                           <a
@@ -197,22 +195,41 @@ const NavBar = observer(() => {
                         </li>
                       ))
                     }
-                    {user.user.role === "ADMIN" && 
-                      adminNavItems.map(({ label, path }) => (
-                        <li key={path}>
-                          <a
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              history(path);
-                              setMenuVisible(false);
-                            }}
-                            style={menuItemStyle(path)}
-                          >
-                            {label}
-                          </a>
-                        </li>
-                      ))
-                    }
+                    {user.user.role === "ADMIN" && (
+                      <>
+                        {userNavItems.map(({ label, path }) => (
+                          <li key={path}>
+                            <a
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                history(path);
+                                setMenuVisible(false);
+                              }}
+                              style={menuItemStyle(path)}
+                            >
+                              {label}
+                            </a>
+                          </li>
+                        ))}
+
+                        <li style={{ borderTop: "1px solid #555", margin: "10px 0", maxWidth: "100px" }}></li>
+
+                        {adminNavItems.map(({ label, path }) => (
+                          <li key={path}>
+                            <a
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                history(path);
+                                setMenuVisible(false);
+                              }}
+                              style={menuItemStyle(path)}
+                            >
+                              {label}
+                            </a>
+                          </li>
+                        ))}
+                      </>
+                    )}
                     <li>
                       <a
                         onClick={(e) => {

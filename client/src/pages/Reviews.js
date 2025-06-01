@@ -1,17 +1,19 @@
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Container } from 'react-bootstrap';
 import { observer } from 'mobx-react-lite';
-import ReviewStore from '../store/ReviewStore';
+import { Context } from '../index';
 
 const Reviews = observer(() => {
+    const { review } = useContext(Context);
+    
     useEffect(() => {
-        ReviewStore.loadReviews();
-    }, []);
+        review.loadReviews();
+    }, [review]);
 
     return (
         <Container style={{ minHeight: '90vh' }}>
             <div className="reviews-container">
-                {ReviewStore.reviews.map((review, index) => (
+                {review.reviews && review.reviews.map((review, index) => (
                     <div key={index} className="review-card" style={{ 
                         background: '#27282a',
                         color: '#f7f7f7',
@@ -34,7 +36,7 @@ const Reviews = observer(() => {
                         </small>
                     </div>
                 ))}
-                {ReviewStore.reviews.length === 0 && (
+                {(!review.reviews || review.reviews.length === 0) && (
                     <p style={{ color: '#f7f7f7', textAlign: 'center' }}>
                         Отзывов пока нет
                     </p>

@@ -193,12 +193,10 @@ class OrderController {
                 return next(ApiError.notFound('Заказ не найден'));
             }
         
-            // Удаляем связанные OrderItems
             await OrderItem.destroy({
                 where: { orderId: id }
             });
         
-            // Удаляем сам заказ
             await order.destroy();
         
             return res.json({ message: 'Заказ успешно удален' });

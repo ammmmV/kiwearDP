@@ -12,10 +12,9 @@ import "../styles/Style.css";
 import { createReview } from "../http/reviewAPI";
 import { Link } from "react-router-dom";
 import { REVIEWS_ROUTE } from "../utils/consts";
-import ReviewStore from "../store/ReviewStore";
 
 const UserProfile = observer(() => {
-  const { user, order } = useContext(Context);
+  const { user, order, review } = useContext(Context);
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
@@ -31,7 +30,7 @@ const UserProfile = observer(() => {
   const [patternImages, setPatternImages] = useState({});
   const [orderDetails, setOrderDetails] = useState({});
 
-  const [selectedPattern, setSelectedPattern] = useState(null);
+  // const [selectedPattern, setSelectedPattern] = useState(null);
   const [canReview, setCanReview] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
@@ -84,17 +83,23 @@ const UserProfile = observer(() => {
 
     const loadUserReviews = async () => {
       try {
-        await ReviewStore.loadUserReviews();
-        setComments(
-          ReviewStore.userReviews.map((review) => ({
-            id: review.id,
-            patternId: review.pattern.id,
-            pattern: review.pattern.name,
-            rating: review.rating,
-            comment: review.comment,
-            date: new Date(review.date).toLocaleDateString(),
-          }))
-        );
+        await review.loadUserReviews();
+        if (Array.isArray(review.userReviews) && review.userReviews.length > 0) {
+          setComments(
+            review.userReviews.map((review) => ({
+              id: review.id,
+              patternId: review.pattern?.id,
+              pattern: review.pattern?.name || 'Неизвестный товар',
+              rating: review.rating,
+              comment: review.comment,
+              date: review.date ? new Date(review.date).toLocaleDateString() : 'Дата не указана',
+              status: review.status || 'PENDING'
+            }))
+          );
+        } else {
+          console.log("Отзывы пользователя отсутствуют или имеют неверный формат:", review.userReviews);
+          setComments([]);
+        }
       } catch (error) {
         console.error("Ошибка при загрузке отзывов пользователя:", error);
         setComments([]);
@@ -102,7 +107,7 @@ const UserProfile = observer(() => {
     };
 
     loadUserReviews();
-  }, [user.user, order]);
+  }, [user.user, order, review]);
 
   const handleLogout = () => {
     user.setUser({});
@@ -139,7 +144,7 @@ const UserProfile = observer(() => {
   const handleReviewSubmit = async (e) => {
     e.preventDefault();
     try {
-      await ReviewStore.addReview({
+      await review.addReview({
         patternId: Number(selectedPatternId),
         rating: Number(rating),
         comment,
@@ -193,11 +198,15 @@ const UserProfile = observer(() => {
               marginRight: "20px",
             }}
           >
-            <img
-              src={mouse}
-              width={comments.length > 0 ? 150 : 300}
-              alt="mouse"
-            />
+            {comments.length > 0 && <img src={mouse} width={150} alt="mouse" />}
+            {/* <Button
+              variant="outline-light"
+              onClick={handleShow}
+              className="mt-2 mb-3"
+              style={{ width: "200px" }}
+            >
+              Добавить отзыв
+            </Button> */}
             <Form.Label style={{ color: "#f7f7f7" }}>Ваши данные</Form.Label>
             <Form.Control
               className="mb-3 border-secondary"
@@ -343,9 +352,9 @@ const UserProfile = observer(() => {
                             }
                             alt={comment.pattern}
                             style={{
-                              width: "100px",
-                              height: "120px",
-                              marginTop: "10px",
+                              width: "120px",
+                              height: "140px",
+                              marginTop: "20px",
                               objectFit: "cover",
                               marginRight: "15px",
                               borderRadius: "5px",
@@ -367,6 +376,23 @@ const UserProfile = observer(() => {
                               Оценка: {comment.rating}
                             </span>
                             <span>Дата отзыва: {comment.date}</span>
+                            <span
+                              style={{
+                                color:
+                                  comment.status === "APPROVED"
+                                    ? "#4caf50"
+                                    : comment.status === "REJECTED"
+                                    ? "#f44336"
+                                    : "#ffc107",
+                                fontWeight: "bold",
+                              }}
+                            >
+                              {comment.status === "APPROVED"
+                                ? "Одобрен"
+                                : comment.status === "REJECTED"
+                                ? "Отклонен"
+                                : "На рассмотрении"}
+                            </span>
                           </div>
                           {orderDetails[comment.patternId] && (
                             <div style={{ fontSize: "0.9em", color: "#aaa" }}>

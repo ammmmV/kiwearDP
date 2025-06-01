@@ -7,7 +7,7 @@ import ItemList from "../components/ItemList";
 import { PatternModal } from '../components/modals/ItemModal';
 import styled from 'styled-components';
 import filter from '../assets/filters-svgrepo-com.svg'
-import FilterModal from '../components/modals/FilterModal'; 
+import FilterModal from '../components/modals/FilterModal';
 
 const SearchInput = styled.input`
     background: rgba(39, 40, 42, 0.8);
@@ -29,6 +29,28 @@ const SearchInput = styled.input`
     }
 `;
 
+const CatalogLayout = styled.div`
+    display: flex;
+    gap: 30px;
+    margin-top: 20px;
+    max-width: 100%;
+    height: 100%;
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+        gap: 20px;
+    }
+`;
+
+const ProductsContainer = styled.div`
+    flex: 1;
+    max-width: calc(100% - 210px);
+
+    @media (max-width: 768px) {
+        max-width: 100%;
+    }
+`;
+
 const ContentContainer = styled.div`
     display: flex;
     flex-direction: row;
@@ -39,36 +61,30 @@ const ContentContainer = styled.div`
     padding-right: 20px;
     overflow-y: auto;
     max-height: calc(100vh - 200px);
-    
+
     &::-webkit-scrollbar {
         width: 8px;
     }
-    
+
     &::-webkit-scrollbar-track {
         background: rgba(39, 40, 42, 0.8);
     }
-    
+
     &::-webkit-scrollbar-thumb {
         background: #267b54;
         border-radius: 4px;
     }
-    
+
     &::-webkit-scrollbar-thumb:hover {
         background: #3fc586;
     }
-`;
 
-const CatalogLayout = styled.div`
-    display: flex;
-    gap: 30px;
-    margin-top: 20px;
-    max-width: 100%;
-    height: 100%;
-`;
-
-const ProductsContainer = styled.div`
-    flex: 1;
-    max-width: calc(100% - 210px);
+    @media (max-width: 768px) {
+        justify-content: center; /* Центрирование карточек на мобильных */
+        max-height: none;
+        overflow-y: visible;
+        padding-right: 0;
+    }
 `;
 
 const FilterButton = styled(Button)`
@@ -124,7 +140,7 @@ const Catalog = observer(() => {
 
     const filterItemsBySearch = (items) => {
         if (!searchQuery) return items;
-        return items.filter(item => 
+        return items.filter(item =>
             item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
             (item.description && item.description.toLowerCase().includes(searchQuery.toLowerCase()))
         );
@@ -139,7 +155,7 @@ const Catalog = observer(() => {
     };
 
     return (
-        <Container>
+        <Container style={{ overflow: 'auto' }}>
             <CatalogLayout>
                 <ProductsContainer>
                     <div style={{ display: 'flex', gap: '20px', marginBottom: '20px' }}>
@@ -149,20 +165,20 @@ const Catalog = observer(() => {
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                         />
-                        <FilterButton onClick={() => setShowFilter(true)} style={{background: "none", border: "none"}}>
+                        <FilterButton onClick={() => setShowFilter(true)} style={{ background: "none", border: "none" }}>
                             <img src={filter} alt="Фильтры" style={{ width: '30px', height: 'auto' }} />
                         </FilterButton>
                     </div>
                     <ContentContainer>
-                        <ItemList 
-                            items={filterItemsBySearch(filteredPatterns)} 
+                        <ItemList
+                            items={filterItemsBySearch(filteredPatterns)}
                             ItemModal={PatternModal}
                         />
                     </ContentContainer>
                 </ProductsContainer>
             </CatalogLayout>
 
-            <FilterModal 
+            <FilterModal
                 show={showFilter}
                 onHide={() => setShowFilter(false)}
                 priceRange={priceRange}

@@ -1,20 +1,29 @@
-import React, { useEffect, useState } from 'react';
-import { Container, Table, Button, Form } from 'react-bootstrap';
+import React, { useEffect, useState, useContext } from 'react';
+import { Container, Table, Button, Form, ButtonGroup } from 'react-bootstrap';
 import { observer } from 'mobx-react-lite';
-import ReviewStore from '../store/ReviewStore';
+import { Context } from '../index';
 
 const AdminReviews = observer(() => {
+    const { review } = useContext(Context);
     const [searchTerm, setSearchTerm] = useState('');
     const [filterRating, setFilterRating] = useState('');
+    const [filterStatus, setFilterStatus] = useState('');
 
+    // В useEffect добавить зависимости от фильтров
     useEffect(() => {
-        ReviewStore.loadReviews();
-    }, []);
+        // Загрузка отзывов с применением фильтров
+        review.loadReviews({
+            search: searchTerm,
+            rating: filterRating,
+            status: filterStatus
+        });
+    }, [review, searchTerm, filterRating, filterStatus]);
 
+    // Добавляем функцию handleDelete
     const handleDelete = async (reviewId) => {
         if (window.confirm('Вы уверены, что хотите удалить этот отзыв?')) {
             try {
-                await ReviewStore.deleteReview(reviewId);
+                await review.deleteReview(reviewId);
                 alert('Отзыв успешно удален');
             } catch (error) {
                 alert('Ошибка при удалении отзыва');
@@ -22,12 +31,28 @@ const AdminReviews = observer(() => {
         }
     };
 
-    const filteredReviews = ReviewStore.reviews.filter(review => {
-        const matchesSearch = review.pattern?.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                            review.comment.toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesRating = filterRating === '' || review.rating === parseInt(filterRating);
-        return matchesSearch && matchesRating;
-    });
+    // Добавляем функцию handleStatusChange
+    const handleStatusChange = async (reviewId, newStatus) => {
+        try {
+            await review.updateReviewStatus(reviewId, newStatus);
+            alert('Статус отзыва успешно обновлен');
+        } catch (error) {
+            alert('Ошибка при обновлении статуса отзыва: ' + error.message);
+        }
+    };
+
+    // Удалить функцию filteredReviews и использовать напрямую review.reviews
+    const filteredReviews = Array.isArray(review.reviews) && review.reviews.length > 0 
+      ? review.reviews.filter(review => {
+          if (!review) return false;
+          const matchesSearch = 
+            (review.pattern?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            review.comment?.toLowerCase().includes(searchTerm.toLowerCase()));
+          const matchesRating = filterRating === '' || review.rating === parseInt(filterRating);
+          const matchesStatus = filterStatus === '' || review.status === filterStatus;
+          return matchesSearch && matchesRating && matchesStatus;
+        }) 
+      : [];
 
     return (
         <Container style={{ minHeight: '90vh', color: '#f7f7f7' }}>
@@ -58,6 +83,19 @@ const AdminReviews = observer(() => {
                         <option value="1">1 звезда</option>
                     </Form.Select>
                 </Form.Group>
+
+                <Form.Group style={{ width: '200px' }}>
+                    <Form.Select
+                        value={filterStatus}
+                        onChange={(e) => setFilterStatus(e.target.value)}
+                        style={{ background: '#27282a', color: '#f7f7f7', border: '1px solid #3d3d3d' }}
+                    >
+                        <option value="">Все статусы</option>
+                        <option value="PENDING">На рассмотрении</option>
+                        <option value="APPROVED">Одобрено</option>
+                        <option value="REJECTED">Отклонено</option>
+                    </Form.Select>
+                </Form.Group>
             </div>
 
             <Table striped bordered hover style={{ background: '#27282a', color: '#f7f7f7' }}>
@@ -68,6 +106,7 @@ const AdminReviews = observer(() => {
                         <th>Пользователь</th>
                         <th>Оценка</th>
                         <th>Комментарий</th>
+                        <th>Статус</th>
                         <th>Действия</th>
                     </tr>
                 </thead>
@@ -79,6 +118,22 @@ const AdminReviews = observer(() => {
                             <td>{review.user?.email || 'Пользователь не найден'}</td>
                             <td>{review.rating}/5</td>
                             <td>{review.comment}</td>
+                            <td>
+                                <ButtonGroup size="sm">
+                                    <Button
+                                        variant={review.status === 'APPROVED' ? 'success' : 'outline-success'}
+                                        onClick={() => handleStatusChange(review.id, 'APPROVED')}
+                                    >
+                                        Одобрить
+                                    </Button>
+                                    <Button
+                                        variant={review.status === 'REJECTED' ? 'danger' : 'outline-danger'}
+                                        onClick={() => handleStatusChange(review.id, 'REJECTED')}
+                                    >
+                                        Отклонить
+                                    </Button>
+                                </ButtonGroup>
+                            </td>
                             <td>
                                 <Button
                                     variant="danger"

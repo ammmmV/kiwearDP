@@ -242,7 +242,9 @@ const Orders = () => {
               <OrderDetailRow>
                 <OrderDetailLabel>Номер карты</OrderDetailLabel>
                 <OrderDetailValue>
-                  {selectedOrder.cardNumber || "Не указан"}
+                  {selectedOrder.cardNumber ? 
+                    selectedOrder.cardNumber.slice(0, -4).replace(/\d/g, '•') + selectedOrder.cardNumber.slice(-4) 
+                    : "Не указан"}
                 </OrderDetailValue>
               </OrderDetailRow>
 

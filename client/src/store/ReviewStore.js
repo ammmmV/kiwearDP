@@ -1,16 +1,29 @@
 import { makeAutoObservable } from 'mobx';
-import { fetchReviews, createReview, deleteReview, fetchUserReviews } from '../http/reviewAPI';
+import {
+    fetchReviews,
+    createReview,
+    deleteReview,
+    fetchUserReviews,
+    updateReviewStatus
+  } from '../http/reviewAPI';import { $authHost } from '../http';
 
-class ReviewStore {
+export default class ReviewStore {
     reviews = [];
     userReviews = [];
     constructor() {
         makeAutoObservable(this);
     }
 
-    async loadReviews() {
+    async loadReviews(filters = {}) {
         try {
-            this.reviews = await fetchReviews();
+            // Формирование параметров запроса из фильтров
+            const params = new URLSearchParams();
+            if (filters.search) params.append('search', filters.search);
+            if (filters.rating) params.append('rating', filters.rating);
+            if (filters.status) params.append('status', filters.status);
+            
+            const response = await $authHost.get('api/review/admin', { params });
+            this.reviews = response.data;
         } catch (error) {
             console.error("Ошибка при загрузке отзывов:", error);
             throw error;
@@ -19,7 +32,9 @@ class ReviewStore {
 
     async loadUserReviews() {
         try {
-            this.userReviews = await fetchUserReviews();
+            const data = await fetchUserReviews();
+            console.log("Данные с сервера:", data);
+            this.userReviews = data;
         } catch (error) {
             console.error("Ошибка при загрузке отзывов пользователя:", error);
             throw error;
@@ -37,6 +52,19 @@ class ReviewStore {
         }
     }
 
+    async updateReviewStatus(id, status) {
+        try {
+            const updatedReview = await updateReviewStatus(id, status);
+            this.reviews = this.reviews.map(review =>
+                review.id === id ? { ...review, status } : review
+            );
+            return updatedReview;
+        } catch (error) {
+            console.error("Ошибка при обновлении статуса отзыва:", error);
+            throw error;
+        }
+    }
+
     async deleteReview(id) {
         try {
             await deleteReview(id);
@@ -48,4 +76,3 @@ class ReviewStore {
     }
 }
 
-export default new ReviewStore();

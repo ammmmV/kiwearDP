@@ -28,7 +28,7 @@ const FilterModal = observer(({
             <Modal.Header closeButton style={{ background: 'rgba(39, 40, 42, 0.95)', border: '1px solid #267b54', color: 'white' }}>
                 <Modal.Title>Фильтры</Modal.Title>
             </Modal.Header>
-            <Modal.Body style={{ background: 'rgba(39, 40, 42, 0.95)', border: '1px solid #267b54', color: 'white' }}>
+            <Modal.Body style={{ background: 'rgba(39, 40, 42, 0.95)', border: '1px solid #267b54', color: 'white' }} className="custom-scroll">
                 <Form>
                     <Form.Group className="mb-3">
                         <Form.Label>Диапазон цены</Form.Label>

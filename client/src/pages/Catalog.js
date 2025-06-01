@@ -29,6 +29,43 @@ const SearchInput = styled.input`
     }
 `;
 
+const PatternList = styled.div`
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding-right: 20px;
+    overflow-y: auto;
+    max-height: calc(100vh - 200px);
+    
+    /* Удаляем встроенные стили скролл-бара */
+    /*
+    &::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: rgba(39, 40, 42, 0.8);
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: #267b54;
+        border-radius: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+        background: #3fc586;
+    }
+    */
+
+    @media (max-width: 768px) {
+        justify-content: center; /* Центрирование карточек на мобильных */
+        max-height: none;
+        overflow-y: visible;
+        padding-right: 0;
+    }
+`;
+
 const CatalogLayout = styled.div`
     display: flex;
     gap: 30px;
@@ -61,7 +98,6 @@ const ContentContainer = styled.div`
     padding-right: 20px;
     overflow-y: auto;
     max-height: calc(100vh - 200px);
-
     &::-webkit-scrollbar {
         width: 8px;
     }
@@ -80,7 +116,7 @@ const ContentContainer = styled.div`
     }
 
     @media (max-width: 768px) {
-        justify-content: center; /* Центрирование карточек на мобильных */
+        justify-content: center;
         max-height: none;
         overflow-y: visible;
         padding-right: 0;
@@ -155,7 +191,7 @@ const Catalog = observer(() => {
     };
 
     return (
-        <Container style={{ overflow: 'auto' }}>
+        <Container style={{ overflow: 'auto' }} className="custom-scroll">
             <CatalogLayout>
                 <ProductsContainer>
                     <div style={{ display: 'flex', gap: '20px', marginBottom: '20px' }}>

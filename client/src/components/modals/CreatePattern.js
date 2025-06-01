@@ -174,6 +174,7 @@ const CreatePattern = observer(({ show, onHide }) => {
                     <Dropdown style={{ marginTop: '2px', marginBottom: '10px' }}>
                         <StyledDropdownToggle>{pattern.selectedType?.name || "Выберите фурнитуру"}</StyledDropdownToggle>
                         <StyledDropdownMenu>
+
                             {pattern.types?.map(type =>
                                 <Dropdown.Item
                                     onClick={() => pattern.setSelectedType(type)}

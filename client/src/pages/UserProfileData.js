@@ -176,15 +176,8 @@ const UserProfile = observer(() => {
   const handleShow = () => setShowModal(true);
 
   return (
-    <Container 
-      style={{ 
-        minHeight: "90vh", 
-        display: "flex", 
-        justifyContent: "center", 
-        alignItems: "center" 
-      }}
-    >
-      <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
+    <Container style={{ minHeight: "90vh" }}>
+      <div style={{ display: "flex", justifyContent: "center" }}>
         <div
           className="profile-card"
           style={{
@@ -203,7 +196,8 @@ const UserProfile = observer(() => {
               marginRight: "20px",
             }}
           >
-            {comments.length > 0 && <img src={mouse} width={150} alt="mouse" />}
+            <img src={mouse} width={150} alt="mouse" style={{ marginBottom: "20px" }} />
+
             <Form.Label style={{ color: "#f7f7f7" }}>Ваши данные</Form.Label>
             <Form.Control
               className="mb-3 border-secondary"
@@ -212,7 +206,6 @@ const UserProfile = observer(() => {
               disabled={!isEditing}
               style={{ background: "#27282a", color: "#f7f7f7" }}
             />
-            {/* <Form.Label style={{ color: "#f7f7f7" }}>Имя:</Form.Label> */}
             <Form.Control
               className="mb-3 border-secondary"
               value={name}
@@ -220,7 +213,6 @@ const UserProfile = observer(() => {
               disabled={!isEditing}
               style={{ background: "#27282a", color: "#f7f7f7" }}
             />
-            {/* <Form.Label style={{ color: "#f7f7f7" }}>Телефон:</Form.Label> */}
             <InputMask
               mask="+375 (99) 999-99-99"
               value={phone}
@@ -236,21 +228,6 @@ const UserProfile = observer(() => {
                 />
               )}
             </InputMask>
-            {/* <Form.Label style={{ color: "#f7f7f7" }}>Размер одежды:</Form.Label>
-            <Form.Select
-              className="mb-4 border-secondary"
-              value={size}
-              onChange={(e) => setSize(e.target.value)}
-              disabled={!isEditing}
-              style={{ background: "#27282a", color: "#f7f7f7" }}
-            >
-              <option value="">Выберите размер</option>
-              <option value="XS">XS (42)</option>
-              <option value="S">S (44)</option>
-              <option value="M">M (46)</option>
-              <option value="L">L (48)</option>
-              <option value="XL">XL (50)</option>
-            </Form.Select> */}
             <div className="d-flex justify-content-between mb-4">
               <Button variant="outline-light" onClick={handleLogout}>
                 Выйти
@@ -280,16 +257,6 @@ const UserProfile = observer(() => {
               justifyContent: comments.length > 0 ? "flex-start" : "center",
             }}
           >
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                marginBottom: "20px",
-                width: "100%",
-              }}
-            ></div>
-
             {comments.length > 0 ? (
               <div style={{ width: "100%" }}>
                 <div
@@ -424,7 +391,22 @@ const UserProfile = observer(() => {
                 </div>
               </div>
             ) : (
-              <div style={{ textAlign: "center", width: "100%" }}>
+              <div style={{ 
+                textAlign: "center", 
+                width: "100%", 
+                display: "flex", 
+                flexDirection: "column", 
+                alignItems: "center" 
+              }}>
+                <img src={mouse} width={300} alt="mouse" style={{ marginBottom: "20px" }} />
+                <Button
+                  variant="outline-light"
+                  onClick={handleShow}
+                  className="mb-3"
+                  style={{ width: "200px" }}
+                >
+                  Добавить отзыв
+                </Button>
                 <p>Вы ещё не оставляли отзывов.</p>
               </div>
             )}

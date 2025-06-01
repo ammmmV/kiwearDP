@@ -5,6 +5,7 @@ import styled from "styled-components";
 import { fetchPatternReviews } from "../../http/reviewAPI";
 import { toast } from "react-custom-alert";
 import { fetchHeaderData } from "../../http/userAPI";
+import bigStar from "../../assets/bigStar.png";
 
 const StyledModal = styled(Modal)`
   .modal-content {
@@ -97,7 +98,30 @@ const ReviewHeader = styled.div`
 `;
 
 const ReviewRating = styled.div`
+  display: flex;
+  align-items: center;
   color: #267b54;
+  font-weight: bold;
+`;
+
+const StarRating = styled.div`
+  display: flex;
+  align-items: center;
+  margin-left: 5px;
+`;
+
+const StarContainer = styled.div`
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  margin-right: 2px;
+  background: url(${bigStar}) no-repeat center center;
+  background-size: contain;
+  color: #ffffff;
+  font-size: 10px;
   font-weight: bold;
 `;
 
@@ -217,7 +241,14 @@ const ItemModal = ({ show, onHide, item, type }) => {
                     reviews.map((review, index) => (
                       <ReviewItem key={index}>
                         <ReviewHeader>
-                          <ReviewRating>Оценка: {review.rating}/5</ReviewRating>
+                          <ReviewRating>
+                            {/* Оценка: {review.rating} */}
+                            <StarRating>
+                              {[...Array(review.rating)].map((_, i) => (
+                                <StarContainer key={i}>★</StarContainer>
+                              ))}
+                            </StarRating>
+                          </ReviewRating>
                           <ReviewDate>
                             {new Date(review.date).toLocaleDateString()}
                           </ReviewDate>

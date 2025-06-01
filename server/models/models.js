@@ -26,6 +26,7 @@ const Pattern = sequelize.define('pattern', {
     name: { type: DataTypes.STRING, unique: true, allowNull: false },
     price: { type: DataTypes.DECIMAL, allowNull: false },
     img: { type: DataTypes.STRING, allowNull: false },
+    pdf: { type: DataTypes.STRING },
     description: { type: DataTypes.TEXT },
 });
 

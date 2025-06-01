@@ -7,7 +7,6 @@ class FabricController {
 
     async create(req, res, next) {
         try {
-
             let { name } = req.body
             const fabric = await Fabric.create({ name });
 
@@ -20,6 +19,27 @@ class FabricController {
     async getAll(req, res) {
         const fabrics = await Fabric.findAll()
         return res.json(fabrics)
+    }
+    
+    async update(req, res, next) {
+        try {
+            const { id } = req.params;
+            const { name } = req.body;
+            
+            const fabric = await Fabric.findByPk(id);
+            if (!fabric) {
+                return res.status(404).json({ message: 'Ткань не найдена' });
+            }
+            
+            if (name !== undefined) fabric.name = name;
+            
+            await fabric.save();
+            
+            return res.json({ message: 'Обновление выполнено успешно', fabric });
+        } catch (error) {
+            console.error('Ошибка при обновлении ткани:', error);
+            next(ApiError.badRequest(error.message))
+        }
     }
 }
 

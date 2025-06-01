@@ -78,3 +78,23 @@ export const removeFromBasket = async (id) => {
     const { data } = await $authHost.post('api/basket', id)
     return data
 };
+
+export const updateType = async (typeId, updatedData) => {
+    try {
+        const { data } = await $authHost.put(`/api/type/${typeId}`, updatedData);
+        return data;
+    } catch (error) {
+        console.error("Ошибка при обновлении фурнитуры:", error);
+        throw error;
+    }
+};
+
+export const updateFabric = async (fabricId, updatedData) => {
+    try {
+        const { data } = await $authHost.put(`/api/fabric/${fabricId}`, updatedData);
+        return data;
+    } catch (error) {
+        console.error("Ошибка при обновлении ткани:", error);
+        throw error;
+    }
+};

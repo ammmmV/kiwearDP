@@ -5,9 +5,12 @@ import CreateFabric from "../components/modals/CreateFabric";
 import CreatePattern from "../components/modals/CreatePattern";
 import kiwi from "../assets/kiwi-bird.svg";
 import "../styles/Style.css";
-import { fetchTypes, fetchFabrics } from "../http/patternAPI";
+import { fetchTypes, fetchFabrics, updateType, updateFabric } from "../http/patternAPI";
 import { Context } from "../index";
 import minus from "../assets/minus-svg.svg";
+import pen from "../assets/pen-svg.svg";
+import check from "../assets/check-svg.svg";
+import cross from "../assets/cross-svg.svg";
 import { $authHost } from "../http";
 
 const Admin = () => {
@@ -17,6 +20,12 @@ const Admin = () => {
   const [types, setTypes] = useState([]);
   const [fabrics, setFabrics] = useState([]);
   const { pattern } = useContext(Context);
+  
+  // Состояния для редактирования
+  const [editTypeMode, setEditTypeMode] = useState(null);
+  const [editTypeData, setEditTypeData] = useState({ name: '' });
+  const [editFabricMode, setEditFabricMode] = useState(null);
+  const [editFabricData, setEditFabricData] = useState({ name: '' });
 
   useEffect(() => {
     fetchTypes().then((data) => setTypes(data));
@@ -49,6 +58,62 @@ const Admin = () => {
     }
   };
 
+  // Функции для редактирования типов
+  const handleEditType = (type) => {
+    setEditTypeMode(type.id);
+    setEditTypeData({ name: type.name });
+  };
+
+  const handleTypeChange = (value) => {
+    setEditTypeData({ name: value });
+  };
+
+  const handleSaveType = async (typeId) => {
+    try {
+      const formData = new FormData();
+      formData.append('name', editTypeData.name);
+      
+      await updateType(typeId, formData);
+      setTypes((prevTypes) =>
+        prevTypes.map((type) =>
+          type.id === typeId ? { ...type, name: editTypeData.name } : type
+        )
+      );
+      setEditTypeMode(null);
+      alert("Изменения успешно сохранены.");
+    } catch (error) {
+      alert("Ошибка при сохранении изменений.");
+    }
+  };
+
+  // Функции для редактирования тканей
+  const handleEditFabric = (fabric) => {
+    setEditFabricMode(fabric.id);
+    setEditFabricData({ name: fabric.name });
+  };
+
+  const handleFabricChange = (value) => {
+    setEditFabricData({ name: value });
+  };
+
+  const handleSaveFabric = async (fabricId) => {
+    try {
+      const formData = new FormData();
+      formData.append('name', editFabricData.name);
+      
+      await updateFabric(fabricId, formData);
+      setFabrics((prevFabrics) =>
+        prevFabrics.map((fabric) =>
+          fabric.id === fabricId ? { ...fabric, name: editFabricData.name } : fabric
+        )
+      );
+      setEditFabricMode(null);
+      alert("Изменения успешно сохранены.");
+    } catch (error) {
+      alert("Ошибка при сохранении изменений.");
+    }
+  };
+
   return (
     <Container style={{ display: "flex", flexDirection: "column" }}>
       <div style={{ display: "flex", justifyContent: "center" }}>
@@ -70,7 +135,8 @@ const Admin = () => {
               <th>№</th>
               <th>ID</th>
               <th>Название</th>
-              <th></th>
+              <th>Редактировать</th>
+              <th>Удалить</th>
             </tr>
           </thead>
           <tbody>
@@ -78,7 +144,33 @@ const Admin = () => {
               <tr key={type.id} className="userLine">
                 <td>{index + 1}</td>
                 <td>{type.id}</td>
-                <td>{type.name}</td>
+                <td>
+                  {editTypeMode === type.id ? (
+                    <input
+                      type="text"
+                      value={editTypeData.name}
+                      onChange={(e) => handleTypeChange(e.target.value)}
+                    />
+                  ) : (
+                    type.name
+                  )}
+                </td>
+                <td>
+                  {editTypeMode === type.id ? (
+                    <div style={{display: 'flex', flexDirection: 'row'}}>
+                      <button style={{paddingRight: '10px'}} className='butt_edit' onClick={() => handleSaveType(type.id)}>
+                        <img src={check} height={25} alt="Save" />
+                      </button>
+                      <button className='butt_edit' onClick={() => setEditTypeMode(null)}>
+                        <img src={cross} height={18} alt="Cancel" />
+                      </button>
+                    </div>
+                  ) : (
+                    <button className='butt_edit' onClick={() => handleEditType(type)}>
+                      <img src={pen} height={25} alt="Edit" />
+                    </button>
+                  )}
+                </td>
                 <td className="btn-remove">
                   <button
                     className="hover-image-btn hidden"
@@ -115,7 +207,8 @@ const Admin = () => {
               <th>№</th>
               <th>ID</th>
               <th>Название</th>
-              <th></th>
+              <th>Редактировать</th>
+              <th>Удалить</th>
             </tr>
           </thead>
           <tbody>
@@ -123,7 +216,33 @@ const Admin = () => {
               <tr key={fabric.id} className="userLine">
                 <td>{index + 1}</td>
                 <td>{fabric.id}</td>
-                <td>{fabric.name}</td>
+                <td>
+                  {editFabricMode === fabric.id ? (
+                    <input
+                      type="text"
+                      value={editFabricData.name}
+                      onChange={(e) => handleFabricChange(e.target.value)}
+                    />
+                  ) : (
+                    fabric.name
+                  )}
+                </td>
+                <td>
+                  {editFabricMode === fabric.id ? (
+                    <div style={{display: 'flex', flexDirection: 'row'}}>
+                      <button style={{paddingRight: '10px'}} className='butt_edit' onClick={() => handleSaveFabric(fabric.id)}>
+                        <img src={check} height={25} alt="Save" />
+                      </button>
+                      <button className='butt_edit' onClick={() => setEditFabricMode(null)}>
+                        <img src={cross} height={18} alt="Cancel" />
+                      </button>
+                    </div>
+                  ) : (
+                    <button className='butt_edit' onClick={() => handleEditFabric(fabric)}>
+                      <img src={pen} height={25} alt="Edit" />
+                    </button>
+                  )}
+                </td>
                 <td className="btn-remove">
                   <button
                     className="hover-image-btn hidden"
@@ -156,7 +275,6 @@ const Admin = () => {
           fetchTypes().then((data) => setTypes(data));
         }}
       />
-      {/* <div className="kiwi-background"></div> */}
     </Container>
   );
 };

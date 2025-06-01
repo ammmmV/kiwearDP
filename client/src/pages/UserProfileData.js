@@ -82,7 +82,6 @@ const UserProfile = observer(() => {
 
     fetchOrderedPatterns();
 
-    // В методе loadUserReviews (примерно строка 70-80)
     const loadUserReviews = async () => {
       try {
         await review.loadUserReviews();
@@ -94,7 +93,6 @@ const UserProfile = observer(() => {
             rating: review.rating,
             comment: review.comment,
             date: new Date(review.date).toLocaleDateString(),
-            status: review.status // Добавляем статус
           }))
         );
       } catch (error) {
@@ -175,8 +173,15 @@ const UserProfile = observer(() => {
   const handleShow = () => setShowModal(true);
 
   return (
-    <Container style={{ minHeight: "90vh" }}>
-      <div style={{ display: "flex", justifyContent: "center" }}>
+    <Container 
+      style={{ 
+        minHeight: "90vh", 
+        display: "flex", 
+        justifyContent: "center", 
+        alignItems: "center" 
+      }}
+    >
+      <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
         <div
           className="profile-card"
           style={{
@@ -196,14 +201,6 @@ const UserProfile = observer(() => {
             }}
           >
             {comments.length > 0 && <img src={mouse} width={150} alt="mouse" />}
-            <Button
-              variant="outline-light"
-              onClick={handleShow}
-              className="mt-2 mb-3"
-              style={{ width: "200px" }}
-            >
-              Добавить отзыв
-            </Button>
             <Form.Label style={{ color: "#f7f7f7" }}>Ваши данные</Form.Label>
             <Form.Control
               className="mb-3 border-secondary"
@@ -276,7 +273,8 @@ const UserProfile = observer(() => {
               minWidth: "350px",
               display: "flex",
               flexDirection: "column",
-              alignItems: "flex-start",
+              alignItems: comments.length > 0 ? "flex-start" : "center",
+              justifyContent: comments.length > 0 ? "flex-start" : "center",
             }}
           >
             <div

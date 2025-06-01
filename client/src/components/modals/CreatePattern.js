@@ -6,7 +6,6 @@ import { createPattern, fetchFabrics, fetchTypes } from "../../http/patternAPI";
 import { observer } from "mobx-react-lite";
 import styled from 'styled-components';
 
-// Стили для модального окна и его элементов
 const StyledModalHeader = styled(Modal.Header)`
     background: #27282a;
     color: #f7f7f7;

@@ -63,7 +63,7 @@ const UserTable = () => {
                             <td>
                                 <Dropdown>
                                     <Dropdown.Toggle variant="none" style={{ color: 'white' }}>{user.role}</Dropdown.Toggle>
-                                    <Dropdown.Menu style={{ overflowY: 'auto' }}>
+                                    <Dropdown.Menu style={{ overflowY: 'auto' }} className="custom-scroll">
                                         <Dropdown.Item style={{fontSize: '1em'}} onClick={() => handleRoleChange('ADMIN', user.id)}>ADMIN</Dropdown.Item>
                                         <Dropdown.Item style={{fontSize: '1em'}} onClick={() => handleRoleChange('USER', user.id)}>USER</Dropdown.Item>
                                     </Dropdown.Menu>

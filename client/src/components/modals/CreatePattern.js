@@ -54,7 +54,7 @@ const CreatePattern = observer(({ show, onHide }) => {
                 <Form>
                     <Dropdown variant="success" style={{marginTop: '2px', marginBottom: '2px'}}>
                         <Dropdown.Toggle variant="success">{pattern.selectedType?.name || "Выберите фурнитуру"}</Dropdown.Toggle>
-                        <Dropdown.Menu style={{ maxHeight: '300px', overflowY: 'auto' }}>
+                        <Dropdown.Menu style={{ maxHeight: '300px', overflowY: 'auto' }} className="custom-scroll">
                             {pattern.types?.map(type =>
                                 <Dropdown.Item
                                     onClick={() => pattern.setSelectedType(type)}

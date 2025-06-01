@@ -1,3 +1,8 @@
+/* html, body, #root {
+    height: 100%;
+    margin: 0;
+  } */
+
 .auth-card {
     position: relative;
     padding: 5px;
@@ -126,7 +131,7 @@
     border: 2px solid #198754;
     border-collapse: separate;
     border-radius: 10px;
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 
 .custom-table th,

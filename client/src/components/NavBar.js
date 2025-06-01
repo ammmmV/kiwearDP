@@ -86,6 +86,7 @@ const NavBar = observer(() => {
   ];
 
   const adminNavItems = [
+    { label: "Ткани / Фурнитура", path:  ADMIN_ROUTE},
     { label: "Ассортимент лекала", path: PATTERNS_FIX_ROUTE },
     { label: "Заказы пользователей", path: ADMIN_ORDERS_ROUTE },
     { label: "Отзывы пользователей", path: ADMIN_REVIEWS_ROUTE },
@@ -108,40 +109,59 @@ const NavBar = observer(() => {
             />
           </Button>
 
-          <img
-            src={kiwi}
-            height={55}
-            alt="Kiwi Logo"
-            style={{ marginRight: "10px", cursor: "pointer" }}
-            onClick={() => history(SHOP_ROUTE)}
-          />
-          <span
-            style={{
-              color: "white",
-              fontSize: "32px",
-              cursor: "pointer",
-              fontStyle: "italic"
-            }}
-            onClick={() => history(SHOP_ROUTE)}
-          >
-          <span>k</span>
-          <span style={{color: "#267b54", fontSize: "33px", fontWeight: "bold"}}>i</span>
-            Wear
-          </span>
-          {currentPageTitle && (
-            <span
-              style={{
-                color: "#fff",
-                fontSize: "1.5em",
-                marginLeft: "15px",
-                display: "flex",
-                alignItems: "center",
-              }}
-            >
-              <span style={{ color: "#fff", margin: "0 10px 0 0" }}>→</span>
-              {currentPageTitle}
-            </span>
-          )}
+          <div
+  style={{
+    display: "flex",
+    alignItems: "center", // выравнивание по вертикали
+  }}
+>
+  <img
+    src={kiwi}
+    height={55}
+    alt="Kiwi Logo"
+    style={{ marginRight: "10px", cursor: "pointer" }}
+    onClick={() => history(SHOP_ROUTE)}
+  />
+
+  <span
+    style={{
+      color: "white",
+      fontSize: "32px",
+      cursor: "pointer",
+      fontStyle: "italic",
+      display: "flex",          // важно!
+      alignItems: "center",     // чтобы все части надписи были выровнены по вертикали
+    }}
+    onClick={() => history(SHOP_ROUTE)}
+  >
+    <span>k</span>
+    <span
+      style={{
+        color: "#267b54",
+        fontSize: "33px",
+        fontWeight: "bold",
+      }}
+    >
+      i
+    </span>
+    Wear
+  </span>
+
+  {currentPageTitle && (
+    <span
+      style={{
+        color: "#fff",
+        fontSize: "1.5em",
+        marginLeft: "15px",
+        display: "flex",
+        alignItems: "center", // центрируем стрелку и текст
+      }}
+    >
+      <span style={{ color: "#fff", marginRight: "10px" }}>→</span>
+      {currentPageTitle}
+    </span>
+  )}
+</div>
 
           <div
             className={`menuShow ${menuVisible ? "active" : ""}`}

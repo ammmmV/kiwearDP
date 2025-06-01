@@ -384,7 +384,7 @@ const Basket = observer(() => {
         <Modal.Header closeButton>
           <Modal.Title>Оформление заказа</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body className="custom-scroll">
           <FormGroup>
             <Form.Label>Номер карты</Form.Label>
             <InputMask

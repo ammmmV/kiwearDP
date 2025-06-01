@@ -16,6 +16,9 @@ const ModalTitle = styled(Modal.Title)`
 
 const ModalBody = styled(Modal.Body)`
   color: #ffffff;
+  &.custom-scroll {
+    overflow-y: auto;
+  }
 `;
 
 const ItemPrice = styled.div`
@@ -60,7 +63,7 @@ const ItemModal = ({ show, onHide, item, type }) => {
       <Modal.Header closeButton>
         <ModalTitle>{item.name}</ModalTitle>
       </Modal.Header>
-      <ModalBody>
+      <ModalBody className="custom-scroll">
         <div
           style={{
             display: "flex",

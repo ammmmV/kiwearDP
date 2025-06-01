@@ -198,6 +198,7 @@ const Orders = () => {
             color: "white",
             padding: "2rem",
           }}
+          className="custom-scroll"
         >
           {selectedOrder && (
             <>

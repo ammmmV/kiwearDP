@@ -2,8 +2,6 @@ import React, { useState, useEffect, useContext } from "react";
 import { Container, Badge, Modal, Table, Button } from "react-bootstrap";
 import styled from "styled-components";
 import { Context } from "../index";
-import { useRef } from 'react';
-import printIcon from '../assets/print.svg';
 
 const StyledContainer = styled(Container)`
   padding: 2rem;
@@ -52,38 +50,6 @@ const OrderDetailLabel = styled.div`
 const OrderDetailValue = styled.div`
   color: white;
   font-size: 1.1rem;
-`;
-
-// Новый стилизованный компонент для контейнера иконок
-const IconContainer = styled.div`
-    display: flex;
-    flex-direction: row; /* Размещаем иконки друг под другом */
-    align-items: center; /* Центрируем иконки горизонтально */
-    justify-content: center; /* Центрируем иконки вертикально */
-    gap: 5px; /* Отступ между иконками */
-    flex-basis: 80px; /* Фиксированная ширина для блока иконок */
-    min-width: 80px; /* Минимальная ширина, чтобы не схлопывался */
-`;
-
-const IconButtonStyle = styled.button`
-    background: none;
-    border: none;
-    padding: 5px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.2s ease-in-out;
-
-    &:hover {
-        transform: scale(1.1);
-    }
-
-    img {
-        width: 20px; /* Размер иконки */
-        height: 20px;
-        filter: invert(100%) sepia(0%) saturate(7483%) hue-rotate(246deg) brightness(118%) contrast(119%); /* Белый цвет иконки для темной темы */
-    }
 `;
 
 const Orders = () => {
@@ -171,11 +137,6 @@ const Orders = () => {
     const comment = form.comment.value;
   };
 
-  const handleDownloadPdf = (pdfPath) => {
-    const fullPdfUrl = process.env.REACT_APP_API_URL + `/` + pdfPath;
-    window.open(fullPdfUrl, '_blank');
-  };
-
   return (
     <StyledContainer>
       <div
@@ -213,7 +174,6 @@ const Orders = () => {
       ))}
       
 
-      {/* чек */}
       <Modal
         show={showOrderModal}
         onHide={() => setShowOrderModal(false)}
@@ -290,39 +250,14 @@ const Orders = () => {
 
               <OrderDetailRow>
                 <OrderDetailLabel>Товары</OrderDetailLabel>
-                <div style={{ flexGrow: 1 }}> {/* Обертка для всех товаров */}
                 {selectedOrder?.patterns?.map((pattern, index) => (
-                  <div
-                    key={index}
-                    style={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'center', /* Выравниваем элементы по центру вертикали */
-                      width: '100%',
-                      marginBottom: '8px', /* Отступ между элементами товара */
-                    }}
-                  >
-                    {/* Название слева */}
-                    <span style={{ flexGrow: 1, textAlign: 'left' }}>
-                      {pattern.name} × {pattern.order_item?.quantity}
-                    </span>
-
-                    {/* Иконки по центру */}
-                    {pattern.pdf && (
-                      <IconContainer>
-                        <IconButtonStyle onClick={() => handleDownloadPdf(pattern.pdf)} title="Печать PDF">
-                          <img src={printIcon} alt="Печать" />
-                        </IconButtonStyle>
-                      </IconContainer>
-                    )}
-
-                    {/* Цена справа */}
-                    <span style={{ color: '#ffbf00', textAlign: 'right', minWidth: '80px' }}>
-                      {Number(pattern.price).toFixed(2)} BYN
-                    </span>
+                  <div key={index} style={{ width: '100%' }}>
+                    <OrderDetailValue style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <span>{pattern.name} × {pattern.order_item?.quantity}</span>
+                      <span style={{ color: '#ffbf00' }}>{Number(pattern.price).toFixed(2)} BYN</span>
+                    </OrderDetailValue>
                   </div>
                 ))}
-              </div>
               </OrderDetailRow>
 
               <OrderDetailRow>
@@ -392,31 +327,6 @@ const Orders = () => {
         </div>
       )}
     </StyledContainer>
-  );
-};
-
-const PdfPrintViewer = ({ pdfPath, onClose }) => {
-  const printRef = useRef();
-
-  const handlePrint = () => {
-    if (printRef.current) {
-      window.print(); // Печатает всю страницу, включая PDF
-    }
-  };
-
-  return (
-    <div style={{ display: 'none' }}>
-      <div ref={printRef}>
-        <object
-          data={pdfPath}
-          type="application/pdf"
-          width="100%"
-          height="800px"
-        >
-          <p>Ваш браузер не поддерживает встроенные PDF. <a href={pdfPath}>Скачать</a></p>
-        </object>
-      </div>
-    </div>
   );
 };
 

@@ -7,6 +7,7 @@ const checkRoleMiddleware = require('../middleware/checkRoleMiddleware');
 router.post('/', authMiddleware, reviewController.create);
 router.get('/', reviewController.getAll);
 router.get('/user', authMiddleware, reviewController.getUserReviews);
+router.get('/pattern/:patternId', reviewController.getPatternReviews);
 router.delete('/:id', authMiddleware, reviewController.deleteReview);
 router.put('/admin/status/:id', checkRoleMiddleware('ADMIN'), reviewController.updateReviewStatus);
 router.get('/admin', authMiddleware, checkRoleMiddleware('ADMIN'), reviewController.getAllForAdmin);

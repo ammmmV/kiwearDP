@@ -34,3 +34,13 @@ export const updateReviewStatus = async (id, status) => {
     throw error;
   }
 };
+
+export const fetchPatternReviews = async (patternId) => {
+  try {
+    const { data } = await $host.get(`/api/review/pattern/${patternId}`);
+    return data;
+  } catch (error) {
+    console.error("Ошибка при получении отзывов для паттерна:", error);
+    throw error;
+  }
+};

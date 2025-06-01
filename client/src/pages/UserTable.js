@@ -4,6 +4,7 @@ import { fetchUsers, deleteUser, updateUserRole } from "../http/userAPI"
 import { Dropdown } from "react-bootstrap"
 import "../styles/Style.css"
 import minus from '../assets/minus-svg.svg'
+import { toast } from 'react-custom-alert'
 
 const UserTable = () => {
     console.log('table')
@@ -19,9 +20,9 @@ const UserTable = () => {
             try {
                 await deleteUser(userId);
                 setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
-                alert("Пользователь успешно удалён.");
+                toast.success("Пользователь успешно удалён.");
             } catch (error) {
-                alert("Ошибка при удалении пользователя.");
+                toast.error("Ошибка при удалении пользователя.");
             }
         }
     };
@@ -34,9 +35,9 @@ const UserTable = () => {
                     user.id === userId ? { ...user, role: newRole } : user
                 )
             );
-            alert(`Роль пользователя успешно обновлена на ${newRole}.`);
+            toast.success(`Роль пользователя успешно обновлена на ${newRole}.`);
         } catch (error) {
-            alert("Ошибка при обновлении роли пользователя.");
+            toast.error("Ошибка при обновлении роли пользователя.");
         }
     };
 

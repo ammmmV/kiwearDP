@@ -45,7 +45,10 @@ const ItemList = ({ items, ItemModal }) => {
                             width={220} 
                             height={220} 
                             src={process.env.REACT_APP_API_URL + '/' + item.img}
-                            style={{ objectFit: 'cover' }}
+                            style={{
+                                objectFit: 'cover',
+                                borderRadius: 'var(--bs-card-border-radius)' // Добавляем border-radius сюда
+                            }}
                         />
                         <Card.Body>
                             <ItemName>{item.name}</ItemName>

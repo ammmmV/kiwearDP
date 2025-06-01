@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Container, Table, Dropdown, Form, Row, Col, Button } from "react-bootstrap";
 import { $authHost } from "../http";
 import styled from "styled-components";
+import { toast } from "react-custom-alert";
 
 const StyledContainer = styled(Container)`
   padding: 2rem;
@@ -101,6 +102,7 @@ const AdminOrders = () => {
       setOrders(data);
     } catch (e) {
       console.error("Ошибка при получении заказов:", e);
+      toast.error("Ошибка при получении заказов");
     }
   };
 
@@ -121,6 +123,7 @@ const AdminOrders = () => {
       fetchOrders();
     } catch (e) {
       console.error("Ошибка при обновлении статуса:", e);
+      toast.error("Ошибка при обновлении статуса");
     }
   };
 
@@ -131,6 +134,7 @@ const AdminOrders = () => {
         fetchOrders();
       } catch (e) {
         console.error("Ошибка при удалении заказа:", e);
+        toast.error("Ошибка при удалении заказа");
       }
     }
   };

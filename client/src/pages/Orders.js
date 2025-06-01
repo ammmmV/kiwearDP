@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { Container, Badge, Modal, Table, Button } from "react-bootstrap";
 import styled from "styled-components";
 import { Context } from "../index";
+import { toast } from "react-custom-alert";
 
 const StyledContainer = styled(Container)`
   padding: 2rem;
@@ -65,6 +66,7 @@ const Orders = () => {
         setOrders(order.orders);
       } catch (error) {
         console.error("Ошибка при загрузке заказов:", error);
+        toast.error("Ошибка при загрузке заказов");
       }
     };
 

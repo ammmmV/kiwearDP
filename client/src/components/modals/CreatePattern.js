@@ -5,6 +5,7 @@ import { Context } from "../../index";
 import { createPattern, fetchFabrics, fetchTypes } from "../../http/patternAPI";
 import { observer } from "mobx-react-lite";
 import styled from 'styled-components';
+import { toast } from 'react-custom-alert';
 
 const StyledModalHeader = styled(Modal.Header)`
     background: #27282a;
@@ -99,31 +100,31 @@ const CreatePattern = observer(({ show, onHide }) => {
 
     const addPattern = () => {
         if (!pattern.selectedType || !pattern.selectedType.id) {
-            alert("Пожалуйста, выберите тип фурнитуры!");
+            toast.error("Пожалуйста, выберите тип фурнитуры!");
             return;
         }
 
         // Проверка на выбор ткани
         if (!pattern.selectedFabric || !pattern.selectedFabric.id) {
-            alert("Пожалуйста, выберите тип ткани!");
+            toast.error("Пожалуйста, выберите тип ткани!");
             return;
         }
 
         // Проверка на наличие имени
         if (!name.trim()) {
-            alert("Пожалуйста, введите название лекала!");
+            toast.error("Пожалуйста, введите название лекала!");
             return;
         }
 
         // Проверка на цену
         if (price <= 0) {
-            alert("Пожалуйста, введите корректную стоимость (больше 0)!");
+            toast.error("Пожалуйста, введите корректную стоимость (больше 0)!");
             return;
         }
 
         // Проверка на наличие изображения
         if (!imgFile) {
-            alert("Пожалуйста, загрузите изображение лекала!");
+            toast.error("Пожалуйста, загрузите изображение лекала!");
             return;
         }
 
@@ -137,7 +138,7 @@ const CreatePattern = observer(({ show, onHide }) => {
         if (imgFile) {
             formData.append('img', imgFile);
         } else {
-            alert("Пожалуйста, загрузите изображение!");
+            toast.error("Пожалуйста, загрузите изображение!");
             return;
         }
 
@@ -147,10 +148,10 @@ const CreatePattern = observer(({ show, onHide }) => {
 
         createPattern(formData).then(data => {
             onHide();
-            alert("Лекало успешно добавлено!");
+            toast.success("Лекало успешно добавлено!");
         }).catch(error => {
             console.error("Ошибка при добавлении лекала:", error);
-            alert("Ошибка при добавлении лекала: " + (error.response?.data?.message || error.message));
+            toast.error("Ошибка при добавлении лекала: " + (error.response?.data?.message || error.message));
         });
     };
 

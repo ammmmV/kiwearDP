@@ -9,18 +9,15 @@ import { Context } from "./index";
 import { check } from "./http/userAPI";
 import { Spinner } from "react-bootstrap";
 import Footer from "./components/Footer";
+import { toast, ToastContainer } from 'react-custom-alert';
+import 'react-custom-alert/dist/index.css';
+
 
 const App = observer(() => {
   const { user } = useContext(Context);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-      console.log("nein token");
-    }
-
     check()
       .then((data) => {
         console.log("tocken  " + data);
@@ -48,6 +45,7 @@ const App = observer(() => {
         </div>
         <Footer />
       </BrowserRouter>
+      <ToastContainer/>
     </div>
   );
 });

@@ -6,6 +6,7 @@ import InputMask from "react-input-mask";
 import styled from "styled-components";
 import { fetchHeaderData } from '../http/userAPI';
 import "../styles/Style.css";
+import { toast } from "react-custom-alert";
 
 const StyledContainer = styled(Container)`
   padding: 1.5rem;
@@ -200,6 +201,7 @@ const Basket = observer(() => {
         }
       } catch (error) {
         console.error("Ошибка при загрузке корзины:", error);
+        toast.error("Ошибка при загрузке корзины");
       }
     };
 
@@ -227,7 +229,7 @@ const Basket = observer(() => {
       }
     } catch (error) {
       console.error("Ошибка при удалении из корзины:", error);
-      alert("Произошла ошибка при удалении товара из корзины");
+      toast.error("Произошла ошибка при удалении товара из корзины");
     }
   };
 
@@ -245,13 +247,13 @@ const Basket = observer(() => {
       }
     } catch (error) {
       console.error("Ошибка при изменении количества:", error);
-      alert("Произошла ошибка при изменении количества");
+      toast.error("Произошла ошибка при изменении количества");
     }
   };
 
   const handleOrder = () => {
     if (!user.isAuth) {
-      alert("Необходимо войти в аккаунт, чтобы оформить заказ");
+      toast.error("Необходимо войти в аккаунт, чтобы оформить заказ");
       return;
     }
 
@@ -267,7 +269,7 @@ const Basket = observer(() => {
 
   const confirmOrder = async () => {
     if (!user.isAuth) {
-      alert("Необходимо авторизоваться для оформления заказа");
+      toast.error("Необходимо авторизоваться для оформления заказа");
       return;
     }
 
@@ -320,7 +322,7 @@ const Basket = observer(() => {
       }
     } catch (err) {
       console.error("Ошибка при оформлении заказа:", err);
-      alert(
+      toast.error(
         err.response?.data?.message ||
         "Произошла ошибка при оформлении заказа. Пожалуйста, попробуйте позже."
       );

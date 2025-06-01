@@ -8,6 +8,7 @@ import check from '../assets/check-svg.svg'
 import pen from '../assets/pen-svg.svg'
 import CreatePattern from "../components/modals/CreatePattern"
 import kiwi from '../assets/kiwi-bird.svg'
+import { toast } from 'react-custom-alert';
 
 const Container = styled.div`
     display: flex;
@@ -51,9 +52,9 @@ const PatternTable = () => {
                 try {
                     await deletePattern(patternId);
                     setPatterns((prevPatterns) => prevPatterns.filter((pattern) => pattern.id !== patternId));
-                    alert("Паттерн успешно удалён.");
+                    toast.success("Паттерн успешно удалён.");
                 } catch (error) {
-                    alert("Ошибка при удалении паттерна.");
+                    toast.error("Ошибка при удалении паттерна.");
                 }
             }
         };
@@ -80,9 +81,9 @@ const PatternTable = () => {
                 )
             );
             setEditMode(null);
-            alert("Изменения успешно сохранены.");
+            toast.success("Изменения успешно сохранены.");
         } catch (error) {
-            alert("Ошибка при сохранении изменений.");
+            toast.error("Ошибка при сохранении изменений.");
         }
     };
 

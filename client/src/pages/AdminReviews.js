@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import { Container, Table, Button, Form, ButtonGroup } from "react-bootstrap";
 import { observer } from "mobx-react-lite";
 import { Context } from "../index";
+import { toast } from "react-custom-alert";
 
 const AdminReviews = observer(() => {
   const { review } = useContext(Context);
@@ -21,9 +22,9 @@ const AdminReviews = observer(() => {
     if (window.confirm("Вы уверены, что хотите удалить этот отзыв?")) {
       try {
         await review.deleteReview(reviewId);
-        alert("Отзыв успешно удален");
+        toast.success("Отзыв успешно удален");
       } catch (error) {
-        alert("Ошибка при удалении отзыва");
+        toast.error("Ошибка при удалении отзыва");
       }
     }
   };
@@ -31,9 +32,9 @@ const AdminReviews = observer(() => {
   const handleStatusChange = async (reviewId, newStatus) => {
     try {
       await review.updateReviewStatus(reviewId, newStatus);
-      alert("Статус отзыва успешно обновлен");
+      toast.success("Статус отзыва успешно обновлен");
     } catch (error) {
-      alert("Ошибка при обновлении статуса отзыва: " + error.message);
+      toast.error("Ошибка при обновлении статуса отзыва: " + error.message);
     }
   };
 

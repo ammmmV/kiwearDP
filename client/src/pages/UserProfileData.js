@@ -13,6 +13,7 @@ import "../styles/Style.css";
 import { createReview } from "../http/reviewAPI";
 import { Link } from "react-router-dom";
 import { REVIEWS_ROUTE } from "../utils/consts";
+import { toast } from "react-custom-alert";
 
 const UserProfile = observer(() => {
   const { user, order, review } = useContext(Context);
@@ -76,6 +77,7 @@ const UserProfile = observer(() => {
         setPatternImages(imagesMap);
       } catch (e) {
         console.error("Ошибка при получении заказов:", e);
+        toast.error("Ошибка при получении заказов");
         setOrderedPatterns([]);
       }
     };
@@ -97,6 +99,7 @@ const UserProfile = observer(() => {
         );
       } catch (error) {
         console.error("Ошибка при загрузке отзывов пользователя:", error);
+        toast.error("Ошибка при получении отзывов");
         setComments([]);
       }
     };
@@ -129,10 +132,10 @@ const UserProfile = observer(() => {
       setSize(updatedData.size);
       setName(updatedData.name);
       setIsEditing(false);
-      alert("Данные успешно обновлены!");
+      toast.success("Данные успешно обновлены!");
     } catch (error) {
       console.error("Ошибка при сохранении данных:", error);
-      alert("Произошла ошибка при сохранении данных");
+      toast.error("Произошла ошибка при сохранении данных");
     }
   };
 
@@ -147,10 +150,10 @@ const UserProfile = observer(() => {
       setSelectedPatternId("");
       setRating("");
       setComment("");
-      alert("Отзыв успешно отправлен!");
+      toast.success("Отзыв успешно отправлен!");
     } catch (error) {
       console.error("Ошибка при отправке отзыва:", error);
-      alert(error.response?.data?.message || "Ошибка при отправке отзыва");
+      toast.error(error.response?.data?.message || "Ошибка при отправке отзыва");
     }
   };
 

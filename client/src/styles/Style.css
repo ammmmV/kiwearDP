@@ -200,12 +200,14 @@
     font-size: 2em;
 }
 
-.menuShow li, a{
+.menuShow li,
+a {
     font-size: 20px;
     color: #c4c4c4;
     text-decoration: none;
 }
-.menuShow a:hover{
+
+.menuShow a:hover {
     color: #ffffff;
 }
 
@@ -226,7 +228,7 @@
 
 .profile-card input,
 .profile-card select {
-  width: 100%;
+    width: 100%;
 }
 
 .review-card {
@@ -249,9 +251,9 @@
         flex-direction: column;
         align-items: center;
     }
-    
-    .profile-card > form,
-    .profile-card > div {
+
+    .profile-card>form,
+    .profile-card>div {
         width: 100% !important;
         margin-right: 0;
         margin-bottom: 30px;
@@ -259,6 +261,7 @@
 }
 
 @media (max-width: 576px) {
+
     .profile-card input,
     .profile-card select {
         min-width: unset;
@@ -288,17 +291,17 @@
 .user-name-link {
     color: #fff !important;
     font-weight: 500;
-    font-size: 1.1em;    
+    font-size: 1.1em;
     padding: 8px 12px;
-    border-radius: 5px; 
+    border-radius: 5px;
     transition: background-color 0.3s ease, color 0.3s ease;
-    text-decoration: none; 
-    display: inline-flex; 
+    text-decoration: none;
+    display: inline-flex;
     align-items: center;
 }
 
 .user-name-link:hover {
-    background-color: rgba(255, 255, 255, 0.1); 
+    background-color: rgba(255, 255, 255, 0.1);
     color: #fff !important;
 }
 
@@ -306,32 +309,32 @@
 .admin-button,
 .logout-button,
 .login-button {
-    border-color: #267b54; 
-    color: #267b54; 
-    background-color: transparent; 
-    padding: 8px 15px; 
-    font-size: 1em; 
-    font-weight: 600; 
+    border-color: #267b54;
+    color: #267b54;
+    background-color: transparent;
+    padding: 8px 15px;
+    font-size: 1em;
+    font-weight: 600;
     transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
-    border-radius: 5px; 
+    border-radius: 5px;
 }
 
 .basket-button:hover,
 .admin-button:hover,
 .login-button:hover {
-    background-color: #267b54; 
-    color: #fff; 
-    border-color: #267b54; 
+    background-color: #267b54;
+    color: #fff;
+    border-color: #267b54;
 }
 
 .logout-button:hover {
-    background-color: red; 
-    color: #fff; 
-    border-color: red; 
+    background-color: red;
+    color: #fff;
+    border-color: red;
 }
 
 .basket-button {
-    position: relative; 
+    position: relative;
 }
 
 .basket-count-badge {
@@ -347,18 +350,130 @@
 
 .custom-scroll::-webkit-scrollbar {
     width: 8px;
-  }
-  
-  .custom-scroll::-webkit-scrollbar-track {
+}
+
+.custom-scroll::-webkit-scrollbar-track {
     background: rgba(39, 40, 42, 0.8);
-  }
-  
-  .custom-scroll::-webkit-scrollbar-thumb {
+}
+
+.custom-scroll::-webkit-scrollbar-thumb {
     background: #555;
     border-radius: 4px;
-  }
-  
-  .custom-scroll::-webkit-scrollbar-thumb:hover {
+}
+
+.custom-scroll::-webkit-scrollbar-thumb:hover {
     background: #777;
-  }
-  
+}
+
+
+#--react--toast-container {
+    z-index: 9999;
+    /* Убедитесь, что поверх всего */
+    color: #e0e0e0 !important;
+    /* Светлый текст */
+    transform: none;
+    /* Отменяем предыдущий transform */
+    width: auto;
+    /* Позволяем ширине подстраиваться под контент */
+}
+
+@media screen and (max-width: 500px) {
+    #--react--toast-container {
+        width: 90%;
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: 10px;
+        right: auto;
+    }
+}
+
+
+.--react--toast-alert {
+    background-color: #1a1a1a !important;
+    /* Ваш темный фон */
+    border: 1px solid #2e2e2e !important;
+    /* Темная обводка */
+    border-radius: 12px !important;
+    /* Больше скругления */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+    /* Более темная тень */
+    margin: 10px 0 0 0 !important;
+    /* Отступы между тостами */
+    padding: 14px 15px !important;
+    /* Внутренние отступы */
+    font-size: 16px !important;
+    /* Размер шрифта */
+    grid-template-columns: 35px auto !important;
+    /* Увеличим место для иконки */
+}
+
+/* Стиль для текста внутри уведомления */
+.--react--toast-alert p {
+    color: #e0e0e0 !important;
+    /* Светлый текст */
+    font-weight: 500 !important;
+    /* Немного тоньше, чем 600 */
+}
+
+/* Стиль для SVG-иконок */
+.--react--toast-alert svg {
+    width: 25px !important;
+    /* Чуть крупнее иконки */
+    height: 25px !important;
+}
+
+/* ======================================= */
+/* Стили для разных типов уведомлений (success, error, warning, info) */
+/* Если библиотека добавляет классы типа --react--toast-alert--success */
+/* ИЛИ Если они просто меняют SVG-иконку */
+/* Изучите DOM, чтобы увидеть, какие классы добавляются для разных типов */
+
+/* Обычно, для разных типов, цвет иконки и, возможно, левая граница/акцент меняются. */
+
+/* Пример: если есть класс для успеха */
+.--react--toast-alert.--toast-success {
+    /* Это пример класса, проверьте в браузере! */
+    border-left: 5px solid #267b54 !important;
+    /* Зеленый акцент */
+}
+
+.--react--toast-alert.--toast-error {
+    /* Пример */
+    border-left: 5px solid #dc3545 !important;
+    /* Красный акцент */
+}
+
+.--react--toast-alert.--toast-warning {
+    /* Пример */
+    border-left: 5px solid #ffc107 !important;
+    /* Желтый акцент */
+}
+
+.--react--toast-alert.--toast-info {
+    /* Пример */
+    border-left: 5px solid #0dcaf0 !important;
+    /* Голубой акцент */
+}
+
+/* Для прогресс-бара, если он есть и имеет свой класс (ищите в DOM) */
+.--react--toast-alert .--react--toast-progressbar {
+    /* Пример, может быть вложенным */
+    background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.--react--toast-alert .--react--toast-progressbar-fill {
+    /* Пример */
+    background-color: #267b54 !important;
+    /* Зеленый цвет заполнения */
+}
+
+/* Закрывающая кнопка (крестик) */
+.--react--toast-alert .--react--toast-close-button {
+    /* Пример класса */
+    color: #e0e0e0 !important;
+    opacity: 0.7 !important;
+}
+
+.--react--toast-alert .--react--toast-close-button:hover {
+    opacity: 1 !important;
+}

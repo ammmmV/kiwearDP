@@ -81,7 +81,7 @@ const CatalogLayout = styled.div`
 
 const ProductsContainer = styled.div`
     flex: 1;
-    max-width: calc(100% - 210px);
+    // max-width: calc(100% - 210px);
 
     @media (max-width: 768px) {
         max-width: 100%;
@@ -95,7 +95,7 @@ const ContentContainer = styled.div`
     justify-content: flex-start;
     gap: 0px;
     width: 100%;
-    padding-right: 20px;
+    // padding-right: 20px;
     overflow-y: auto;
     max-height: calc(100vh - 200px);
     &::-webkit-scrollbar {

@@ -1,5 +1,6 @@
 import { makeAutoObservable } from "mobx";
 import { $authHost } from "../http";
+import { toast } from "react-custom-alert";
 
 export default class BasketStore {
 
@@ -53,7 +54,7 @@ export default class BasketStore {
             }
     
             if (!localStorage.getItem('token')) {
-                alert('АВТОРИЗУЙСЯ');
+                toast.error('Авторизуйтесь для продолжения');
                 return;
             }
     

@@ -3,6 +3,8 @@ import { Context } from "../../index";
 import { Modal, Button, Image } from "react-bootstrap";
 import styled from "styled-components";
 import { fetchPatternReviews } from "../../http/reviewAPI";
+import { toast } from "react-custom-alert";
+import { fetchHeaderData } from "../../http/userAPI";
 import bigStar from "../../assets/bigStar.png";
 
 const StyledModal = styled(Modal)`
@@ -165,6 +167,7 @@ const ItemModal = ({ show, onHide, item, type }) => {
         })
         .catch(error => {
           console.error("Ошибка при загрузке отзывов:", error);
+          toast.error("Ошибка при загрузке отзывов");
         });
     }
   }, [show, item]);
@@ -172,7 +175,7 @@ const ItemModal = ({ show, onHide, item, type }) => {
   const addToBasket = async () => {
     try {
       if (!user.isAuth) {
-        alert("АВТОРИЗУЙСЯ");
+        toast.error("Авторизуйтесь чтобы продолжить");
         return;
       }
 
@@ -180,9 +183,17 @@ const ItemModal = ({ show, onHide, item, type }) => {
         patternId: item.id
       });
       onHide();
+      toast.success("Добавлено в корзину")
+      const headerData = await fetchHeaderData();
+      if (headerData) {
+        user.setBasketCount(headerData.basketCount);
+      } else {
+        toast.warn("Не удалось получить данные для шапки, сбрасываю счетчик корзины.");
+        user.setBasketCount(0);
+      }
     } catch (error) {
       console.error("Ошибка при добавлении в корзину:", error);
-      alert("Произошла ошибка при добавлении товара в корзину");
+      toast.error("Произошла ошибка при добавлении товара в корзину");
     }
   };
 
@@ -200,23 +211,23 @@ const ItemModal = ({ show, onHide, item, type }) => {
               style={{ objectFit: "cover", maxHeight: "400px", marginTop: "45px" }}
             />
           </ImageContainer>
-          
+
           <InfoContainer>
             <TabContainer>
-              <Tab 
-                active={activeTab === 'description'} 
+              <Tab
+                active={activeTab === 'description'}
                 onClick={() => setActiveTab('description')}
               >
                 Описание
               </Tab>
-              <Tab 
-                active={activeTab === 'reviews'} 
+              <Tab
+                active={activeTab === 'reviews'}
                 onClick={() => setActiveTab('reviews')}
               >
                 Отзывы
               </Tab>
             </TabContainer>
-            
+
             <TabContent>
               {activeTab === 'description' && (
                 <ItemDescription>
@@ -254,15 +265,15 @@ const ItemModal = ({ show, onHide, item, type }) => {
           </InfoContainer>
         </ContentContainer>
       </ModalBody>
-      <Modal.Footer style={{display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between"}}>
+      <Modal.Footer style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
         <ItemPrice>{item.price} BYN</ItemPrice>
         <div>
-        <Button variant="outline-danger" onClick={onHide}>
-          Закрыть
-        </Button>
-        <Button variant="outline-success" onClick={addToBasket}>
-          Добавить в корзину
-        </Button>
+          <Button variant="outline-danger" onClick={onHide}>
+            Закрыть
+          </Button>
+          <Button variant="outline-success" onClick={addToBasket}>
+            Добавить в корзину
+          </Button>
         </div>
       </Modal.Footer>
     </StyledModal>

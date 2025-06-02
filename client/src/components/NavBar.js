@@ -64,6 +64,8 @@ const NavBar = observer(() => {
         return "Отзывы";
       case USERS_FIX_ROUTE:
         return "Пользователи";
+      case ADMIN_ROUTE  :
+        return "Ткани / Фурнитура";
       default:
         return "";
     }
@@ -82,7 +84,6 @@ const NavBar = observer(() => {
     { label: "Корзина", path: BASKET_ROUTE },
     { label: "Личный кабинет", path: USER_PROFILE_DATA_ROUTE },
     { label: "Мои Заказы", path: ORDERS_ROUTE },
-    // { label: "Отзывы", path: REVIEWS_ROUTE }
   ];
 
   const adminNavItems = [
@@ -102,7 +103,7 @@ const NavBar = observer(() => {
           user.setBasketCount(data.basketCount);
         } else {
           user.setBasketCount(0);
-          // user.setUser({}); // Можно сбросить пользователя полностью, если ошибка означает невалидную сессию
+          // user.setUser({});
         }
       } else {
         user.setBasketCount(0);
@@ -160,8 +161,8 @@ const NavBar = observer(() => {
                 fontSize: "32px",
                 cursor: "pointer",
                 fontStyle: "italic",
-                display: "flex",          // важно!
-                alignItems: "center",     // чтобы все части надписи были выровнены по вертикали
+                display: "flex",
+                alignItems: "center", 
               }}
               onClick={() => history(SHOP_ROUTE)}
             >
@@ -185,7 +186,7 @@ const NavBar = observer(() => {
                   fontSize: "1.5em",
                   marginLeft: "15px",
                   display: "flex",
-                  alignItems: "center", // центрируем стрелку и текст
+                  alignItems: "center",
                 }}
               >
                 <span style={{ color: "#fff", marginRight: "10px" }}>→</span>
@@ -195,11 +196,11 @@ const NavBar = observer(() => {
           </div>
 
 
-          <Nav className="ms-auto d-flex align-items-center right-nav-group"> {/* Добавили класс right-nav-group */}
+          <Nav className="ms-auto d-flex align-items-center right-nav-group"> 
             {user.isAuth ? (
               <>
                 <Nav.Link
-                  className="user-name-link" // Добавили класс для стилизации
+                  className="user-name-link"
                   onClick={() => history(USER_PROFILE_DATA_ROUTE)}
                 >
                   {user.user.name || "Пользователь"}
@@ -208,7 +209,7 @@ const NavBar = observer(() => {
                 <Button
                   variant={"outline-light"}
                   onClick={() => history(BASKET_ROUTE)}
-                  className="ms-3 basket-button" // Добавили класс basket-button
+                  className="ms-3 basket-button"
                 >
                   Корзина <span className="basket-count-badge">{user.basketCount}</span>
                 </Button>
@@ -217,7 +218,7 @@ const NavBar = observer(() => {
                   <Button
                     variant={"outline-light"}
                     onClick={() => history(ADMIN_ROUTE)}
-                    className="ms-3 admin-button" // Добавили класс admin-button
+                    className="ms-3 admin-button"
                   >
                     Админ панель
                   </Button>
@@ -226,7 +227,7 @@ const NavBar = observer(() => {
                 <Button
                   variant={"outline-light"}
                   onClick={logOut}
-                  className="ms-3 logout-button" // Добавили класс logout-button
+                  className="ms-3 logout-button"
                 >
                   Выйти
                 </Button>
@@ -235,7 +236,7 @@ const NavBar = observer(() => {
               <Button
                 variant={"outline-light"}
                 onClick={() => history(LOGIN_ROUTE)}
-                className="login-button" // Добавили класс login-button
+                className="login-button"
               >
                 Авторизация
               </Button>

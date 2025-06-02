@@ -145,6 +145,7 @@ const AdminReviews = observer(() => {
                     Одобрить
                   </Button>
                   <Button
+                    style={{ marginLeft: "5px" }}
                     variant={
                       review.status === "REJECTED" ? "danger" : "outline-danger"
                     }

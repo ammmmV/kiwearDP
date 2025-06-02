@@ -12,7 +12,6 @@ import pen from "../assets/pen-svg.svg";
 import check from "../assets/check-svg.svg";
 import cross from "../assets/cross-svg.svg";
 import { $authHost } from "../http";
-import { toast } from "react-custom-alert";
 
 const Admin = () => {
   const [typeVisible, setTypeVisible] = useState(false);
@@ -38,9 +37,9 @@ const Admin = () => {
       try {
         await $authHost.delete(`api/type/${typeId}`);
         setTypes((prevTypes) => prevTypes.filter((type) => type.id !== typeId));
-        toast.success("Фурнитура успешно удалена.");
+        alert("Фурнитура успешно удалена.");
       } catch (error) {
-        toast.error("Ошибка при удалении фурнитуры.");
+        alert("Ошибка при удалении фурнитуры.");
       }
     }
   };
@@ -52,9 +51,9 @@ const Admin = () => {
         setFabrics((prevFabrics) =>
           prevFabrics.filter((fabric) => fabric.id !== fabricId)
         );
-        toast.success("Ткань успешно удалена.");
+        alert("Ткань успешно удалена.");
       } catch (error) {
-        toast.error("Ошибка при удалении ткани.");
+        alert("Ошибка при удалении ткани.");
       }
     }
   };
@@ -81,9 +80,9 @@ const Admin = () => {
         )
       );
       setEditTypeMode(null);
-      toast.success("Изменения успешно сохранены.");
+      alert("Изменения успешно сохранены.");
     } catch (error) {
-      toast.error("Ошибка при сохранении изменений.");
+      alert("Ошибка при сохранении изменений.");
     }
   };
 
@@ -109,9 +108,9 @@ const Admin = () => {
         )
       );
       setEditFabricMode(null);
-      toast.success("Изменения успешно сохранены.");
+      alert("Изменения успешно сохранены.");
     } catch (error) {
-      toast.error("Ошибка при сохранении изменений.");
+      alert("Ошибка при сохранении изменений.");
     }
   };
 

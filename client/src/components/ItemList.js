@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Col, Card, Image } from "react-bootstrap";
 import styled from 'styled-components';
 import bigStar from '../assets/star-svg.svg'
@@ -25,6 +25,29 @@ const ItemName = styled.div`
 
 const ItemPrice = styled.div`
     color: #267b54;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+`;
+
+const StarRating = styled.div`
+    display: flex;
+    align-items: center;
+`;
+
+const StarContainer = styled.div`
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 15px;
+    height: 15px;
+    margin-right: 2px;
+    background: url(${bigStar}) no-repeat center center;
+    background-size: contain;
+    color: #ffffff;
+    font-size: 8px;
     font-weight: bold;
 `;
 
@@ -67,6 +90,34 @@ const CardDescription = styled.div`
 const ItemList = ({ items, ItemModal }) => {
     const [showModal, setShowModal] = useState(false);
     const [selectedItem, setSelectedItem] = useState(null);
+    const [itemRatings, setItemRatings] = useState({});
+
+    useEffect(() => {
+        // Загрузка рейтингов для всех товаров
+        const loadRatings = async () => {
+            const ratings = {};
+            for (const item of items || []) {
+                try {
+                    const reviews = await fetchPatternReviews(item.id);
+                    if (reviews.length > 0) {
+                        // Вычисляем средний рейтинг
+                        const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
+                        ratings[item.id] = Math.round(totalRating / reviews.length);
+                    } else {
+                        ratings[item.id] = 0;
+                    }
+                } catch (error) {
+                    console.error(`Ошибка при загрузке отзывов для товара ${item.id}:`, error);
+                    ratings[item.id] = 0;
+                }
+            }
+            setItemRatings(ratings);
+        };
+
+        if (items && items.length > 0) {
+            loadRatings();
+        }
+    }, [items]);
 
     const handleClick = (item) => {
         setSelectedItem(item);
@@ -111,8 +162,6 @@ const ItemList = ({ items, ItemModal }) => {
                                     Нет отзывов
                                 </CardRating>
                             )}
-                    
-
                         </Card.Body>
                     </StyledCard>
                 </Col>

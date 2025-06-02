@@ -13,7 +13,9 @@ import {
   ORDERS_ROUTE,
   ADMIN_ORDERS_ROUTE,
   ADMIN_REVIEWS_ROUTE,
-  REVIEWS_ROUTE
+  REVIEWS_ROUTE,
+  FABRIC_CALCULATOR_ROUTE,
+  ADMIN_CALCULATOR_ROUTE
 } from "./utils/consts";
 import Basket from "./pages/Basket";
 import Auth from "./pages/Auth";
@@ -27,6 +29,8 @@ import Orders from "./pages/Orders";
 import AdminOrders from "./pages/AdminOrders";
 import AdminReviews from "./pages/AdminReviews";
 import Reviews from "./pages/Reviews";
+import FabricCalculator from "./pages/FabricCalculator";
+import FabricCalculatorAdmin from "./pages/FabricCalculatorAdmin";
 
 export const authRoutes = [
   {
@@ -52,6 +56,10 @@ export const authRoutes = [
   {
     path: ADMIN_REVIEWS_ROUTE,
     Component: AdminReviews
+  },
+  {
+    path: ADMIN_CALCULATOR_ROUTE,
+    Component: FabricCalculatorAdmin
   }
 ];
 
@@ -87,5 +95,9 @@ export const publicRoutes = [
   {
     path: REVIEWS_ROUTE,
     Component: Reviews,
+  },
+  {
+    path: FABRIC_CALCULATOR_ROUTE,
+    Component: FabricCalculator,
   },
 ];

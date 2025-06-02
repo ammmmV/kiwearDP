@@ -1,6 +1,6 @@
 const uuid = require('uuid')
 const path = require('path')
-const { Pattern } = require('../models/models')
+const { Pattern, Review } = require('../models/models')
 const ApiError = require('../error/ApiError');
 
 class PatternController {
@@ -31,43 +31,95 @@ class PatternController {
         }
     }
 
-    async getAll(req, res){
-        let {typeId, fabricId, limit, page} = req.query
-        page = page || 1
-        limit = limit || 9
-        let offset = page * limit - limit
+    async getAll(req, res, next) {
+        let { typeId, fabricId, limit, page } = req.query;
+        page = page || 1;
+        limit = limit || 9;
+        let offset = page * limit - limit;
         let patterns;
-        
-        if (typeId && fabricId) {
-            patterns = await Pattern.findAndCountAll({
-                where: { typeId, fabricId },
-                limit,
-                offset
-            })
-        } else if (typeId) {
-            patterns = await Pattern.findAndCountAll({
-                where: { typeId },
-                limit,
-                offset
-            })
-        } else if (fabricId) {
-            patterns = await Pattern.findAndCountAll({
-                where: { fabricId },
-                limit,
-                offset
-            })
-        } else {
-            patterns = await Pattern.findAndCountAll({limit, offset})
+
+        const whereClause = {};
+        if (typeId) {
+            whereClause.typeId = typeId;
         }
-        return res.json(patterns)
+        if (fabricId) {
+            whereClause.fabricId = fabricId;
+        }
+
+        try {
+            patterns = await Pattern.findAndCountAll({
+                where: whereClause,
+                limit,
+                offset,
+                include: [{
+                    model: Review,
+                    attributes: ['rating'], 
+                    where: { status: 'APPROVED' },
+                    required: false
+                }],
+                order: [['createdAt', 'DESC']] 
+            });
+
+            const patternsWithRating = patterns.rows.map(pattern => {
+                let averageRating = 0;
+                if (pattern.reviews && pattern.reviews.length > 0) {
+                    const totalRating = pattern.reviews.reduce((sum, review) => sum + review.rating, 0);
+                    averageRating = totalRating / pattern.reviews.length;
+                }
+
+               
+                const patternData = pattern.toJSON();
+                patternData.averageRating = parseFloat(averageRating.toFixed(1));
+                delete patternData.reviews;
+
+                return patternData;
+            });
+
+            return res.json({
+                count: patterns.count,
+                rows: patternsWithRating
+            });
+
+        } catch (e) {
+            console.error("Ошибка при получении всех паттернов с рейтингами:", e);
+            next(ApiError.internal('Ошибка при получении паттернов'));
+        }
     }
 
-    async getOne(req, res) {
-        const {id} = req.params;
-        const pattern = await Pattern.findOne({
-            where: {id}
-        });
-        return res.json(pattern);
+    async getOne(req, res, next) {
+        const { id } = req.params;
+        try {
+            const pattern = await Pattern.findOne({
+                where: { id },
+                include: [{
+                    model: Review,
+                    attributes: ['rating', 'comment', 'userId', 'date'],
+                    where: { status: 'APPROVED' }, 
+                    required: false
+                }]
+            });
+
+            if (!pattern) {
+                return next(ApiError.notFound('Паттерн не найден'));
+            }
+
+            let averageRating = 0;
+            if (pattern.reviews && pattern.reviews.length > 0) {
+                const totalRating = pattern.reviews.reduce((sum, review) => sum + review.rating, 0);
+                averageRating = totalRating / pattern.reviews.length;
+            }
+
+            const patternData = pattern.toJSON();
+            patternData.averageRating = parseFloat(averageRating.toFixed(1)); // Округляем
+
+            delete patternData.reviews;
+
+            return res.json(patternData);
+
+        } catch (e) {
+            console.error("Ошибка при получении одного паттерна с рейтингами:", e);
+            next(ApiError.internal('Ошибка при получении паттерна'));
+        }
     }
 
     async updatePattern(req, res) {

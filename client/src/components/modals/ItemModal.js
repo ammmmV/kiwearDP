@@ -148,6 +148,39 @@ const Tab = styled.div`
   border-bottom: ${props => props.active ? '2px solid #267b54' : 'none'};
 `;
 
+// Стилизованный компонент для отображения среднего рейтинга в футере
+const FooterRating = styled.div`
+    display: flex;
+    align-items: center;
+    color: #ffffff;
+    font-size: 1.1em; /* Чуть меньше, чем цена, но хорошо видно */
+    
+    span {
+        font-weight: bold;
+        color: #aaaaaa;
+        margin-left: 5px;
+    }
+
+    img {
+        width: 20px;
+        height: 20px;
+        margin-left: 5px;
+        filter: brightness(1.2) saturate(1.5);
+    }
+`;
+
+// Стилизованный контейнер для кнопок
+const ButtonContainer = styled.div`
+    display: flex;
+    gap: 10px; /* Отступ между кнопками */
+`;
+
+const PriceAndRatingContainer = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Отступ между ценой и рейтингом */
+`;
+
 const ItemModal = ({ show, onHide, item, type }) => {
   const { basket, user } = useContext(Context);
   const [reviews, setReviews] = useState([]);
@@ -266,15 +299,23 @@ const ItemModal = ({ show, onHide, item, type }) => {
         </ContentContainer>
       </ModalBody>
       <Modal.Footer style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-        <ItemPrice>{item.price} BYN</ItemPrice>
-        <div>
+        <PriceAndRatingContainer>
+          <ItemPrice>{item.price} BYN</ItemPrice>
+          {item.averageRating !== undefined && item.averageRating > 0 && (
+            <FooterRating>
+              <span>{item.averageRating.toFixed(1)}</span>
+              <img src={bigStar} alt="star" />
+            </FooterRating>
+          )}
+        </PriceAndRatingContainer>
+        <ButtonContainer>
           <Button variant="outline-danger" onClick={onHide}>
             Закрыть
           </Button>
           <Button variant="outline-success" onClick={addToBasket}>
             Добавить в корзину
           </Button>
-        </div>
+        </ButtonContainer>
       </Modal.Footer>
     </StyledModal>
   );

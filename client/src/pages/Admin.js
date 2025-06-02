@@ -42,7 +42,7 @@ const Admin = () => {
   const [fabrics, setFabrics] = useState([]);
   const { pattern } = useContext(Context);
   const history = useNavigate();
-  
+
   const [editTypeMode, setEditTypeMode] = useState(null);
   const [editTypeData, setEditTypeData] = useState({ name: '' });
   const [editFabricMode, setEditFabricMode] = useState(null);
@@ -92,7 +92,7 @@ const Admin = () => {
     try {
       const formData = new FormData();
       formData.append('name', editTypeData.name);
-      
+
       await updateType(typeId, formData);
       setTypes((prevTypes) =>
         prevTypes.map((type) =>
@@ -119,7 +119,7 @@ const Admin = () => {
     try {
       const formData = new FormData();
       formData.append('name', editFabricData.name);
-      
+
       await updateFabric(fabricId, formData);
       setFabrics((prevFabrics) =>
         prevFabrics.map((fabric) =>
@@ -147,7 +147,7 @@ const Admin = () => {
       </div>
 
       <div style={{ display: "flex", justifyContent: "center" }}>
-      <Table striped bordered hover variant="dark">
+        <Table striped bordered hover variant="dark">
           <thead>
             <tr>
               <th>№</th>
@@ -175,8 +175,8 @@ const Admin = () => {
                 </td>
                 <td>
                   {editTypeMode === type.id ? (
-                    <div style={{display: 'flex', flexDirection: 'row'}}>
-                      <button style={{paddingRight: '10px'}} className='butt_edit' onClick={() => handleSaveType(type.id)}>
+                    <div style={{ display: 'flex', flexDirection: 'row' }}>
+                      <button style={{ paddingRight: '10px' }} className='butt_edit' onClick={() => handleSaveType(type.id)}>
                         <img src={check} height={25} alt="Save" />
                       </button>
                       <button className='butt_edit' onClick={() => setEditTypeMode(null)}>
@@ -184,19 +184,34 @@ const Admin = () => {
                       </button>
                     </div>
                   ) : (
-                    <button className='butt_edit' onClick={() => handleEditType(type)}>
-                      <img src={pen} height={25} alt="Edit" />
-                    </button>
+                    // <button className='butt_edit' onClick={() => handleEditType(type)}>
+                    //   <img src={pen} height={25} alt="Edit" />
+                    // </button>
+                    <Button
+                      variant="outline-success"
+                      onClick={() => handleEditType(type)}
+                      style={{ marginRight: '10px' }} // <--- ADD THIS STYLE
+                    >
+                      Редактировать
+                    </Button>
                   )}
                 </td>
-                <td className="btn-remove">
+                <td>
+                  <Button
+                    variant="outline-danger"
+                    onClick={() => handleRemoveType(type.id)}
+                  >
+                    Удалить
+                  </Button>
+                </td>
+                {/* <td className="btn-remove">
                   <button
                     className="hover-image-btn hidden"
                     onClick={() => handleRemoveType(type.id)}
                   >
                     <img src={minus} height={25} alt="Remove" />
                   </button>
-                </td>
+                </td> */}
               </tr>
             ))}
           </tbody>
@@ -218,7 +233,7 @@ const Admin = () => {
       </div>
 
       <div style={{ display: "flex", justifyContent: "center" }}>
-      <Table striped bordered hover variant="dark">
+        <Table striped bordered hover variant="dark">
           <thead>
             <tr>
               <th>№</th>
@@ -246,8 +261,8 @@ const Admin = () => {
                 </td>
                 <td>
                   {editFabricMode === fabric.id ? (
-                    <div style={{display: 'flex', flexDirection: 'row'}}>
-                      <button style={{paddingRight: '10px'}} className='butt_edit' onClick={() => handleSaveFabric(fabric.id)}>
+                    <div style={{ display: 'flex', flexDirection: 'row' }}>
+                      <button style={{ paddingRight: '10px' }} className='butt_edit' onClick={() => handleSaveFabric(fabric.id)}>
                         <img src={check} height={25} alt="Save" />
                       </button>
                       <button className='butt_edit' onClick={() => setEditFabricMode(null)}>
@@ -255,18 +270,33 @@ const Admin = () => {
                       </button>
                     </div>
                   ) : (
-                    <button className='butt_edit' onClick={() => handleEditFabric(fabric)}>
-                      <img src={pen} height={25} alt="Edit" />
-                    </button>
+                    // <button className='butt_edit' onClick={() => handleEditFabric(fabric)}>
+                    //   <img src={pen} height={25} alt="Edit" />
+                    // </button>
+                    <Button
+                      variant="outline-success"
+                      onClick={() => handleEditFabric(fabric)}
+                      style={{ marginRight: '10px' }} // <--- ADD THIS STYLE
+                    >
+                      Редактировать
+                    </Button>
                   )}
                 </td>
-                <td className="btn-remove">
+                {/* <td className="btn-remove">
                   <button
                     className="hover-image-btn hidden"
                     onClick={() => handleRemoveFabric(fabric.id)}
                   >
                     <img src={minus} height={25} alt="Remove" />
                   </button>
+                </td> */}
+                 <td>
+                  <Button
+                    variant="outline-danger"
+                    onClick={() => handleRemoveFabric(fabric.id)}
+                  >
+                    Удалить
+                  </Button>
                 </td>
               </tr>
             ))}

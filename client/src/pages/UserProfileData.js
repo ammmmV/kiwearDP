@@ -95,7 +95,7 @@ const UserProfile = observer(() => {
             rating: review.rating,
             comment: review.comment,
             date: new Date(review.date).toLocaleDateString(),
-            status: review.status 
+            status: review.status
           }))
 
         );

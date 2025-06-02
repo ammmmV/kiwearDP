@@ -73,6 +73,19 @@ const Review = sequelize.define('review', {
     status: { type: DataTypes.STRING, defaultValue: 'PENDING' }
 });
 
+const FabricCalculator = sequelize.define('fabric_calculator', {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    clothing_type: { type: DataTypes.STRING, allowNull: false },
+    fabricId: { type: DataTypes.INTEGER, allowNull: false },
+    height_min: { type: DataTypes.INTEGER, allowNull: false },
+    height_max: { type: DataTypes.INTEGER, allowNull: false },
+    size_min: { type: DataTypes.INTEGER, allowNull: false },
+    size_max: { type: DataTypes.INTEGER, allowNull: false },
+    base_consumption: { type: DataTypes.DECIMAL(10, 2), allowNull: false },
+    height_factor: { type: DataTypes.DECIMAL(10, 2), defaultValue: 0 },
+    size_factor: { type: DataTypes.DECIMAL(10, 2), defaultValue: 0 },
+});
+
 
 OrderItem.hasOne(Review);
 Review.belongsTo(OrderItem);
@@ -109,6 +122,9 @@ OrderItem.belongsTo(Pattern);
 Order.belongsToMany(Pattern, { through: OrderItem });
 Pattern.belongsToMany(Order, { through: OrderItem });
 
+Fabric.hasMany(FabricCalculator);
+FabricCalculator.belongsTo(Fabric);
+
 module.exports = {
     User,
     Pattern,
@@ -118,5 +134,6 @@ module.exports = {
     OrderItem,
     Review,
     Basket,
-    BasketItem
+    BasketItem,
+    FabricCalculator
 };

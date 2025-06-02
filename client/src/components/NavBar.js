@@ -16,7 +16,9 @@ import {
   ORDERS_ROUTE,
   REVIEWS_ROUTE,
   ADMIN_REVIEWS_ROUTE,
-  ADMIN_ORDERS_ROUTE
+  ADMIN_ORDERS_ROUTE,
+  ADMIN_CALCULATOR_ROUTE,
+  FABRIC_CALCULATOR_ROUTE
 } from "../utils/consts";
 import { Button } from "react-bootstrap";
 import { observer } from "mobx-react-lite";
@@ -64,6 +66,10 @@ const NavBar = observer(() => {
         return "Отзывы";
       case USERS_FIX_ROUTE:
         return "Пользователи";
+      case FABRIC_CALCULATOR_ROUTE:
+        return "Калькулятор ткани";
+      case ADMIN_CALCULATOR_ROUTE:
+        return "Калькулятор ткани";
       case ADMIN_ROUTE  :
         return "Ткани / Фурнитура";
       default:
@@ -84,6 +90,7 @@ const NavBar = observer(() => {
     { label: "Корзина", path: BASKET_ROUTE },
     { label: "Личный кабинет", path: USER_PROFILE_DATA_ROUTE },
     { label: "Мои Заказы", path: ORDERS_ROUTE },
+    { label: "Калькулятор ткани", path: FABRIC_CALCULATOR_ROUTE },
   ];
 
   const adminNavItems = [
@@ -91,7 +98,8 @@ const NavBar = observer(() => {
     { label: "Ассортимент лекала", path: PATTERNS_FIX_ROUTE },
     { label: "Заказы пользователей", path: ADMIN_ORDERS_ROUTE },
     { label: "Отзывы пользователей", path: ADMIN_REVIEWS_ROUTE },
-    { label: "Пользователи", path: USERS_FIX_ROUTE }
+    { label: "Пользователи", path: USERS_FIX_ROUTE },
+    { label: "Калькулятор ткани", path: ADMIN_CALCULATOR_ROUTE },
   ];
 
   useEffect(() => {

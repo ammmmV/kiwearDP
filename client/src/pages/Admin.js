@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Button, Container, Table } from "react-bootstrap";
+import { Button, Container, Table, Row, Card } from "react-bootstrap";
 import CreateType from "../components/modals/CreateType";
 import CreateFabric from "../components/modals/CreateFabric";
 import CreatePattern from "../components/modals/CreatePattern";
@@ -7,11 +7,20 @@ import kiwi from "../assets/kiwi-bird.svg";
 import "../styles/Style.css";
 import { fetchTypes, fetchFabrics, updateType, updateFabric } from "../http/patternAPI";
 import { Context } from "../index";
+import {
+  ADMIN_ORDERS_ROUTE,
+  ADMIN_REVIEWS_ROUTE,
+  ADMIN_ROUTE,
+  PATTERNS_FIX_ROUTE,
+  USERS_FIX_ROUTE,
+  ADMIN_CALCULATOR_ROUTE,
+} from "../utils/consts";
 import minus from "../assets/minus-svg.svg";
 import pen from "../assets/pen-svg.svg";
 import check from "../assets/check-svg.svg";
 import cross from "../assets/cross-svg.svg";
 import { $authHost } from "../http";
+import { useNavigate } from "react-router-dom";
 
 const Admin = () => {
   const [typeVisible, setTypeVisible] = useState(false);
@@ -20,6 +29,7 @@ const Admin = () => {
   const [types, setTypes] = useState([]);
   const [fabrics, setFabrics] = useState([]);
   const { pattern } = useContext(Context);
+  const history = useNavigate();
   
   const [editTypeMode, setEditTypeMode] = useState(null);
   const [editTypeData, setEditTypeData] = useState({ name: '' });

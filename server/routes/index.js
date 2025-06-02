@@ -7,6 +7,7 @@ const fabricRouter = require('./fabricRouter')
 const basketRouter = require('./basketRouter')
 const orderRouter = require('./orderRouter')
 const reviewRouter = require('./reviewRouter')
+const fabricCalculatorRouter = require('./fabricCalculatorRouter')
 
 router.use('/user', userRouter)
 router.use('/type', typeRouter)
@@ -15,5 +16,6 @@ router.use('/fabric', fabricRouter)
 router.use('/basket', basketRouter)
 router.use('/order', orderRouter)
 router.use('/review', reviewRouter)
+router.use('/calculator', fabricCalculatorRouter)
 
 module.exports = router

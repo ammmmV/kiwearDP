@@ -95,7 +95,9 @@ const UserProfile = observer(() => {
             rating: review.rating,
             comment: review.comment,
             date: new Date(review.date).toLocaleDateString(),
+            status: review.status 
           }))
+
         );
       } catch (error) {
         console.error("Ошибка при загрузке отзывов пользователя:", error);
@@ -196,9 +198,14 @@ const UserProfile = observer(() => {
               marginRight: "20px",
             }}
           >
-            <img src={mouse} width={150} alt="mouse" style={{ marginBottom: "20px" }} />
-
-            <Form.Label style={{ color: "#f7f7f7" }}>Ваши данные</Form.Label>
+            {comments.length > 0 ? (
+              <>
+                <img src={mouse} width={150} alt="mouse" style={{ marginBottom: "20px" }} />
+                <Form.Label style={{ color: "#f7f7f7" }}>Ваши данные</Form.Label>
+              </>
+            ) : (
+              <Form.Label style={{ color: "#f7f7f7" }}>Ваши данные</Form.Label>
+            )}
             <Form.Control
               className="mb-3 border-secondary"
               value={email}

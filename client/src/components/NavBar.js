@@ -82,7 +82,7 @@ const NavBar = observer(() => {
     { label: "Корзина", path: BASKET_ROUTE },
     { label: "Личный кабинет", path: USER_PROFILE_DATA_ROUTE },
     { label: "Мои Заказы", path: ORDERS_ROUTE },
-    { label: "Отзывы", path: REVIEWS_ROUTE }
+    // { label: "Отзывы", path: REVIEWS_ROUTE }
   ];
 
   const adminNavItems = [

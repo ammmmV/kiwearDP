@@ -14,15 +14,9 @@ export default class ReviewStore {
         makeAutoObservable(this);
     }
 
-    async loadReviews(filters = {}) {
+    async loadReviews() {
         try {
-            // Формирование параметров запроса из фильтров
-            const params = new URLSearchParams();
-            if (filters.search) params.append('search', filters.search);
-            if (filters.rating) params.append('rating', filters.rating);
-            if (filters.status) params.append('status', filters.status);
-            
-            const response = await $authHost.get('api/review/admin', { params });
+            const response = await $authHost.get('api/review/admin');
             this.reviews = response.data;
         } catch (error) {
             console.error("Ошибка при загрузке отзывов:", error);
@@ -32,9 +26,7 @@ export default class ReviewStore {
 
     async loadUserReviews() {
         try {
-            const data = await fetchUserReviews();
-            console.log("Данные с сервера:", data);
-            this.userReviews = data;
+            this.userReviews = await fetchUserReviews();
         } catch (error) {
             console.error("Ошибка при загрузке отзывов пользователя:", error);
             throw error;

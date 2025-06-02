@@ -111,12 +111,8 @@ const AdminReviews = observer(() => {
         </Form.Group>
       </div>
 
-      <Table
-        striped
-        bordered
-        hover
-        style={{ background: "#27282a", color: "#f7f7f7" }}
-      >
+      <Table striped bordered hover variant="dark">
+
         <thead>
           <tr>
             <th>Дата</th>

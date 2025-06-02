@@ -89,7 +89,7 @@ const PatternTable = () => {
 
     return (
         <Container>
-            <Table striped bordered hover className="mt-3 custom-table" style={{ width: '100%' }}>
+            <Table striped bordered hover variant="dark" style={{ width: '100%' }}>
                 <thead>
                     <tr>
                         <th>№</th>

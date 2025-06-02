@@ -41,8 +41,8 @@ const StyledFormControl = styled(Form.Control)`
         color: #dcdcdc !important;
     }
     &[as="textarea"] {
-        min-height: 80px; /* Например, минимальная высота для textarea */
-        resize: vertical; /* Разрешить изменение размера только по вертикали */
+        min-height: 80px;
+        resize: vertical;
     }
 `;
 
@@ -80,10 +80,9 @@ const CreatePattern = observer(({ show, onHide }) => {
     const { pattern } = useContext(Context);
     const [name, setName] = useState('');
     const [price, setPrice] = useState(0);
-    const [imgFile, setImgFile] = useState(null); // Изменено на imgFile
-    const [pdfFile, setPdfFile] = useState(null); // Новое состояние для PDF
-    const [description, setDescription] = useState(''); // description - это строка, не массив
-    // const [info, setInfo] = useState([]) // Это поле не используется, можно удалить или использовать для других целей
+    const [imgFile, setImgFile] = useState(null);
+    const [pdfFile, setPdfFile] = useState(null);
+    const [description, setDescription] = useState('');
 
     useEffect(() => {
         fetchTypes().then(data => pattern.setTypes(data));
@@ -104,25 +103,21 @@ const CreatePattern = observer(({ show, onHide }) => {
             return;
         }
 
-        // Проверка на выбор ткани
         if (!pattern.selectedFabric || !pattern.selectedFabric.id) {
             toast.error("Пожалуйста, выберите тип ткани!");
             return;
         }
 
-        // Проверка на наличие имени
         if (!name.trim()) {
             toast.error("Пожалуйста, введите название лекала!");
             return;
         }
 
-        // Проверка на цену
         if (price <= 0) {
             toast.error("Пожалуйста, введите корректную стоимость (больше 0)!");
             return;
         }
 
-        // Проверка на наличие изображения
         if (!imgFile) {
             toast.error("Пожалуйста, загрузите изображение лекала!");
             return;

@@ -31,7 +31,6 @@ const Admin = () => {
   const { pattern } = useContext(Context);
   const history = useNavigate();
   
-  // Состояния для редактирования
   const [editTypeMode, setEditTypeMode] = useState(null);
   const [editTypeData, setEditTypeData] = useState({ name: '' });
   const [editFabricMode, setEditFabricMode] = useState(null);
@@ -68,7 +67,6 @@ const Admin = () => {
     }
   };
 
-  // Функции для редактирования типов
   const handleEditType = (type) => {
     setEditTypeMode(type.id);
     setEditTypeData({ name: type.name });
@@ -96,7 +94,6 @@ const Admin = () => {
     }
   };
 
-  // Функции для редактирования тканей
   const handleEditFabric = (fabric) => {
     setEditFabricMode(fabric.id);
     setEditFabricData({ name: fabric.name });
@@ -139,7 +136,7 @@ const Admin = () => {
       </div>
 
       <div style={{ display: "flex", justifyContent: "center" }}>
-        <Table striped bordered hover className="mt-3 custom-table">
+      <Table striped bordered hover variant="dark">
           <thead>
             <tr>
               <th>№</th>
@@ -211,7 +208,7 @@ const Admin = () => {
       </div>
 
       <div style={{ display: "flex", justifyContent: "center" }}>
-        <Table striped bordered hover className="mt-3 custom-table">
+      <Table striped bordered hover variant="dark">
           <thead>
             <tr>
               <th>№</th>

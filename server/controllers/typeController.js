@@ -39,6 +39,24 @@ class TypeController {
             next(ApiError.badRequest(error.message))
         }
     }
+
+    async delete(req, res, next) {
+        try {
+            const { id } = req.params;
+            
+            const type = await Type.findByPk(id);
+            if (!type) {
+                return res.status(404).json({ message: 'Фурнитура не найдена' });
+            }
+            
+            await type.destroy();
+            
+            return res.json({ message: 'Фурнитура успешно удалена' });
+        } catch (error) {
+            console.error('Ошибка при удалении фурнитуры:', error);
+            next(ApiError.badRequest(error.message))
+        }
+    }
 }
 
 module.exports = new TypeController()

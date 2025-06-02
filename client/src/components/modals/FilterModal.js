@@ -1,18 +1,41 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Container, Button, Modal, Form } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 import { observer } from "mobx-react-lite";
+import { Modal, Button, Form } from "react-bootstrap";
+import InputMask from 'react-input-mask';
 import { Context } from "../../index";
 import { fetchPatterns, fetchFabrics, fetchTypes } from "../../http/patternAPI";
 import styled from 'styled-components';
 
-const FilterModal = observer(({ 
-    show, 
-    onHide, 
-    priceRange, 
-    setPriceRange, 
-    selectedFabric, 
-    setSelectedFabric, 
-    selectedType, 
+const FormGroup = styled.div`
+    margin-bottom: 1rem;
+    
+    .form-control, .form-select {
+        background: rgba(39, 40, 42, 0.95);
+        border: 1px solid #267b54;
+        color: white;
+        
+        &:focus {
+            background: rgba(39, 40, 42, 0.95);
+            border-color: #267b54;
+            box-shadow: 0 0 0 0.2rem rgba(38, 123, 84, 0.25);
+            color: white;
+        }
+        
+        &::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+    }
+`;
+
+const FilterModal = observer(({
+    show,
+    onHide,
+    priceRange,
+    setPriceRange,
+    selectedFabric,
+    setSelectedFabric,
+    selectedType,
     setSelectedType,
     onFilter,
     onReset,
@@ -30,7 +53,8 @@ const FilterModal = observer(({
             </Modal.Header>
             <Modal.Body style={{ background: 'rgba(39, 40, 42, 0.95)', border: '1px solid #267b54', color: 'white' }} className="custom-scroll">
                 <Form>
-                    <Form.Group className="mb-3">
+                    {/* Применяем стилизованный FormGroup сюда */}
+                    <FormGroup>
                         <Form.Label>Диапазон цены</Form.Label>
                         <div style={{ display: 'flex', gap: '10px' }}>
                             <Form.Control
@@ -46,11 +70,12 @@ const FilterModal = observer(({
                                 onChange={(e) => setPriceRange({ ...priceRange, max: e.target.value })}
                             />
                         </div>
-                    </Form.Group>
+                    </FormGroup>
 
-                    <Form.Group style={{marginBottom: "3px"}}>
+                    {/* Применяем стилизованный FormGroup сюда */}
+                    <FormGroup>
                         <Form.Label>Ткань</Form.Label>
-                        <Form.Select 
+                        <Form.Select
                             value={selectedFabric}
                             onChange={(e) => setSelectedFabric(e.target.value)}
                         >
@@ -61,9 +86,10 @@ const FilterModal = observer(({
                                 </option>
                             ))}
                         </Form.Select>
-                    </Form.Group>
+                    </FormGroup>
 
-                    <Form.Group style={{marginBottom: "3px"}}>
+                    {/* Применяем стилизованный FormGroup сюда */}
+                    <FormGroup>
                         <Form.Label>Фурнитура</Form.Label>
                         <Form.Select
                             value={selectedType}
@@ -76,7 +102,7 @@ const FilterModal = observer(({
                                 </option>
                             ))}
                         </Form.Select>
-                    </Form.Group>
+                    </FormGroup>
                 </Form>
             </Modal.Body>
             <Modal.Footer style={{ background: 'rgba(39, 40, 42, 0.95)', border: '1px solid #267b54' }}>

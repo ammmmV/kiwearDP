@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Table, Button } from "react-bootstrap"
+import { Table, Button, Form, InputGroup, Row, Col } from "react-bootstrap"
 import { fetchPattern, deletePattern, updatePattern } from "../http/patternAPI"
 import styled from 'styled-components'
 import minus from '../assets/minus-svg.svg'
@@ -20,22 +20,75 @@ const Container = styled.div`
     padding: 20px;
 `;
 
+// Обновляем стилизованную кнопку
 const StyledButton = styled(Button)`
     margin: 20px 0;
-    width: 200px;
+    width: 300px;
+    background: linear-gradient(135deg, #267b54, #43d08e) !important;
+    border: none !important;
+    color: #f7f7f7 !important;
+    &:hover, &:focus {
+        background: linear-gradient(135deg, #267b54, #43d08e) !important;
+        box-shadow: 0 0 0 0.25rem rgba(67, 208, 142, 0.25);
+    }
+`;
+
+const SearchContainer = styled.div`
+    width: 100%;
+    margin-bottom: 20px;
 `;
 
 const PatternTable = () => {
-    console.log('table')
     const [patterns, setPatterns] = useState([]);
     const [editMode, setEditMode] = useState(null);
     const [editData, setEditData] = useState({ name: '', price: '', img: '' });
-    const [patternVisible, setPatternVisible] = useState(false)
-    console.log(useState([]))
+    const [patternVisible, setPatternVisible] = useState(false);
+    
+    // Добавляем состояния для поиска и фильтрации
+    const [searchQuery, setSearchQuery] = useState('');
+    const [priceFilter, setPriceFilter] = useState({ min: '', max: '' });
+    const [sortField, setSortField] = useState('name');
+    const [sortOrder, setSortOrder] = useState('asc');
 
     useEffect(() => {
         fetchPattern().then(data => setPatterns(data));
     }, []);
+
+    // Функция для фильтрации и сортировки паттернов
+    const filteredAndSortedPatterns = patterns
+        .filter(pattern => {
+            // Фильтрация по поисковому запросу (имя или описание)
+            const matchesSearch = pattern.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                                 (pattern.description && pattern.description.toLowerCase().includes(searchQuery.toLowerCase()));
+            
+            // Фильтрация по цене
+            const matchesMinPrice = priceFilter.min === '' || Number(pattern.price) >= Number(priceFilter.min);
+            const matchesMaxPrice = priceFilter.max === '' || Number(pattern.price) <= Number(priceFilter.max);
+            
+            return matchesSearch && matchesMinPrice && matchesMaxPrice;
+        })
+        .sort((a, b) => {
+            // Сортировка по выбранному полю
+            let comparison = 0;
+            if (sortField === 'name') {
+                comparison = a.name.localeCompare(b.name);
+            } else if (sortField === 'price') {
+                comparison = Number(a.price) - Number(b.price);
+            } else if (sortField === 'id') {
+                comparison = a.id - b.id;
+            }
+            
+            // Применение порядка сортировки
+            return sortOrder === 'asc' ? comparison : -comparison;
+        });
+
+    // Функция для сброса фильтров
+    const resetFilters = () => {
+        setSearchQuery('');
+        setPriceFilter({ min: '', max: '' });
+        setSortField('name');
+        setSortOrder('asc');
+    };
 
     const handleEdit = (pattern) => {
         setEditMode(pattern.id);
@@ -89,6 +142,84 @@ const PatternTable = () => {
 
     return (
         <Container>
+            {/* Добавляем компоненты поиска и фильтрации */}
+            <SearchContainer>
+                <Form>
+                    <Row>
+                        <Col md={6}>
+                            <Form.Group className="mb-3">
+                                <Form.Label style={{ color: 'white' }}>Поиск по названию или описанию</Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    placeholder="Введите текст для поиска..."
+                                    value={searchQuery}
+                                    variant="dark"
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                />
+                            </Form.Group>
+                        </Col>
+                        <Col md={6}>
+                            <Form.Group className="mb-3">
+                                <Form.Label style={{ color: 'white' }}>Фильтр по цене</Form.Label>
+                                <Row>
+                                    <Col>
+                                        <Form.Control
+                                            type="number"
+                                            placeholder="Мин."
+                                            value={priceFilter.min}
+                                            onChange={(e) => setPriceFilter({...priceFilter, min: e.target.value})}
+                                        />
+                                    </Col>
+                                    <Col>
+                                        <Form.Control
+                                            type="number"
+                                            placeholder="Макс."
+                                            value={priceFilter.max}
+                                            onChange={(e) => setPriceFilter({...priceFilter, max: e.target.value})}
+                                        />
+                                    </Col>
+                                </Row>
+                            </Form.Group>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col md={6}>
+                            <Form.Group className="mb-3">
+                                <Form.Label style={{ color: 'white' }}>Сортировать по</Form.Label>
+                                <Form.Select 
+                                    value={sortField}
+                                    onChange={(e) => setSortField(e.target.value)}
+                                >
+                                    <option value="name">Названию</option>
+                                    <option value="price">Цене</option>
+                                    <option value="id">ID</option>
+                                </Form.Select>
+                            </Form.Group>
+                        </Col>
+                        <Col md={3}>
+                            <Form.Group className="mb-3">
+                                <Form.Label style={{ color: 'white' }}>Порядок</Form.Label>
+                                <Form.Select
+                                    value={sortOrder}
+                                    onChange={(e) => setSortOrder(e.target.value)}
+                                >
+                                    <option value="asc">По возрастанию</option>
+                                    <option value="desc">По убыванию</option>
+                                </Form.Select>
+                            </Form.Group>
+                        </Col>
+                        <Col md={3} className="d-flex align-items-end">
+                            <StyledButton 
+                                className="mb-3 w-100"
+                                onClick={resetFilters}
+                            >
+                                Сбросить фильтры
+                            </StyledButton>
+                        </Col>
+                    </Row>
+                </Form>
+            </SearchContainer>
+
             <Table striped bordered hover variant="dark" style={{ width: '100%' }}>
                 <thead>
                     <tr>
@@ -103,7 +234,7 @@ const PatternTable = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {patterns?.map((pattern, index) => (
+                    {filteredAndSortedPatterns?.map((pattern, index) => (
                         <tr key={pattern.id} className='userLine'>
                             <td>{index + 1}</td>
                             <td>{pattern.id}</td>
@@ -174,12 +305,10 @@ const PatternTable = () => {
                     ))}
                 </tbody>
             </Table>
+
             <StyledButton
-                variant={"outline-light"}
                 onClick={() => setPatternVisible(true)}
                 style={{
-                    border: '1px solid #fff',
-                    width: '300px',
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',
@@ -188,9 +317,9 @@ const PatternTable = () => {
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '1.2em' }}>
                     <div></div>
                     Добавить лекало
-                    <div className="image-container">
+                    {/* <div className="image-container">
                         <img src={kiwi} width={30} alt="Kiwi" />
-                    </div>
+                    </div> */}
                 </div>
             </StyledButton>
             

@@ -1,7 +1,24 @@
 import React, { useState } from "react";
 import { Container, Modal, Button, Row, Col } from "react-bootstrap";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 import kiwiLogo from "../assets/kiwi-bird.svg";
+import {
+  ADMIN_ROUTE,
+  LOGIN_ROUTE,
+  PATTERNS_FIX_ROUTE,
+  SHOP_ROUTE,
+  USER_PROFILE_DATA_ROUTE,
+  PATTERNS_ROUTE,
+  BASKET_ROUTE,
+  USERS_FIX_ROUTE,
+  ORDERS_ROUTE,
+  REVIEWS_ROUTE,
+  ADMIN_REVIEWS_ROUTE,
+  ADMIN_ORDERS_ROUTE,
+  ADMIN_CALCULATOR_ROUTE,
+  FABRIC_CALCULATOR_ROUTE
+} from "../utils/consts";
 
 const StyledFooter = styled.footer`
   background-color: rgba(39, 40, 42, 0.95);
@@ -153,6 +170,7 @@ const StyledModal = styled(Modal)`
 `;
 
 const Footer = () => {
+  const history = useNavigate();
   const [showAbout, setShowAbout] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
   const currentYear = new Date().getFullYear();
@@ -194,18 +212,16 @@ const Footer = () => {
               <h5>Информация</h5>
               <StyledLink onClick={() => setShowAbout(true)}>О нас</StyledLink>
               <StyledLink onClick={() => setShowHelp(true)}>Справка</StyledLink>
-              <StyledLink>Выход</StyledLink>
-              {/* <StyledLink>Политика конфиденциальности</StyledLink> */}
+              {/* <StyledLink>Выход</StyledLink> */}
             </FooterSection>
           </Col>
           
           <Col lg={2} md={6} sm={12}>
             <FooterSection>
               <h5>Категории</h5>
-              <StyledLink>Каталог</StyledLink>
-              <StyledLink>Личный кабинет</StyledLink>
-              <StyledLink>Корзина</StyledLink>
-              {/* <StyledLink>Акции</StyledLink> */}
+              <StyledLink onClick={() => history(SHOP_ROUTE)}>Каталог</StyledLink>
+              <StyledLink onClick={() => history(USER_PROFILE_DATA_ROUTE)}>Личный кабинет</StyledLink>
+              <StyledLink onClick={() => history(BASKET_ROUTE)}>Корзина</StyledLink>
             </FooterSection>
           </Col>
           

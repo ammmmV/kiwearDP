@@ -43,7 +43,8 @@ const UserTable = () => {
 
     return (
         <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <Table striped bordered hover className="mt-3 custom-table">
+            {/* <Table striped bordered hover className="mt-3 custom-table"> */}
+            <Table striped bordered hover variant="dark" style={{ width: '80%' }}>
                 <thead>
                     <tr>
                         <th>ID</th>

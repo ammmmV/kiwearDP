@@ -21,6 +21,18 @@ import check from "../assets/check-svg.svg";
 import cross from "../assets/cross-svg.svg";
 import { $authHost } from "../http";
 import { useNavigate } from "react-router-dom";
+import styled from 'styled-components';
+
+// Добавляем стилизованную кнопку
+const StyledButton = styled(Button)`
+    background: linear-gradient(135deg, #267b54, #43d08e) !important;
+    border: none !important;
+    color: #f7f7f7 !important;
+    &:hover, &:focus {
+        background: linear-gradient(135deg, #267b54, #43d08e) !important;
+        box-shadow: 0 0 0 0.25rem rgba(67, 208, 142, 0.25);
+    }
+`;
 
 const Admin = () => {
   const [typeVisible, setTypeVisible] = useState(false);
@@ -124,14 +136,13 @@ const Admin = () => {
   return (
     <Container style={{ display: "flex", flexDirection: "column" }}>
       <div style={{ display: "flex", justifyContent: "center" }}>
-        <div style={{ width: "100%", maxWidth: "1000px" }}>
-          <Button
-            variant="outline-light"
+        <div style={{ width: "100%", maxWidth: "1400px" }}>
+          <StyledButton
             className="mt-3 p-2 w-100"
             onClick={() => setTypeVisible(true)}
           >
             Добавить фурнитуру
-          </Button>
+          </StyledButton>
         </div>
       </div>
 
@@ -193,9 +204,8 @@ const Admin = () => {
       </div>
 
       <div style={{ display: "flex", justifyContent: "center" }}>
-        <div style={{ width: "100%", maxWidth: "1000px" }}>
-          <Button
-            variant={"outline-light"}
+        <div style={{ width: "100%", maxWidth: "1400px" }}>
+          <StyledButton
             className="mt-2 p-2 w-100"
             onClick={() => setFabricVisible(true)}
           >
@@ -203,7 +213,7 @@ const Admin = () => {
               <div></div>
               Добавить ткань
             </div>
-          </Button>
+          </StyledButton>
         </div>
       </div>
 

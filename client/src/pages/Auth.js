@@ -104,7 +104,7 @@ const Auth = observer(() => {
             />
 
             <Form.Control
-              className={`mt-2 ${
+              className={`mt-3 ${
                 password && password.length > 3 ? "is-valid" : "is-invalid"
               } border-secondary`}
               placeholder="Введите ваш пароль..."

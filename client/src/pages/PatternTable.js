@@ -41,7 +41,7 @@ const SearchContainer = styled.div`
 const PatternTable = () => {
     const [patterns, setPatterns] = useState([]);
     const [editMode, setEditMode] = useState(null);
-    const [editData, setEditData] = useState({ name: '', price: '', img: '' });
+    const [editData, setEditData] = useState({ name: '', price: '', description: '' }); // Removed 'img' from here
     const [patternVisible, setPatternVisible] = useState(false);
     
     // Добавляем состояния для поиска и фильтрации
@@ -92,10 +92,10 @@ const PatternTable = () => {
 
     const handleEdit = (pattern) => {
         setEditMode(pattern.id);
+        // We only care about name, price, and description for editing
         setEditData({
             name: pattern.name,
             price: pattern.price,
-            img: pattern.img,
             description: pattern.description,
         });
     };
@@ -123,26 +123,24 @@ const PatternTable = () => {
             formData.append('price', editData.price);
             formData.append('description', editData.description);
             
-            if (editData.img instanceof File) {
-                formData.append('img', editData.img);
-            }
+            // Image is no longer part of editData, so we don't append it
 
-            await updatePattern(patternId, formData);
+            const updatedPattern = await updatePattern(patternId, formData);
             setPatterns((prevPatterns) =>
                 prevPatterns.map((pattern) =>
-                    pattern.id === patternId ? { ...pattern, ...editData } : pattern
+                    pattern.id === patternId ? { ...pattern, ...updatedPattern } : pattern
                 )
             );
             setEditMode(null);
             toast.success("Изменения успешно сохранены.");
         } catch (error) {
+            console.error("Error saving pattern:", error);
             toast.error("Ошибка при сохранении изменений.");
         }
     };
 
     return (
         <Container>
-            {/* Добавляем компоненты поиска и фильтрации */}
             <SearchContainer>
                 <Form>
                     <Row>
@@ -240,60 +238,54 @@ const PatternTable = () => {
                             <td>{pattern.id}</td>
                             <td>
                                 {editMode === pattern.id ? (
-                                    <input
-                                        type="text"
-                                        value={editData.name}
-                                        onChange={(e) => handleChange('name', e.target.value)}
-                                    />
+                                        <input
+                                            type="text"
+                                            value={editData.name}
+                                            onChange={(e) => handleChange('name', e.target.value)}
+                                        />
                                 ) : (
                                     pattern.name
                                 )}
                             </td>
                             <td>
                                 {editMode === pattern.id ? (
-                                    <input
-                                        style={{width: '100px'}}
-                                        type="number"
-                                        value={editData.price}
-                                        onChange={(e) => handleChange('price', e.target.value)}
-                                    />
+                                        <input
+                                            style={{width: '100px'}}
+                                            type="number"
+                                            value={editData.price}
+                                            onChange={(e) => handleChange('price', e.target.value)}
+                                        />
                                 ) : (
                                     pattern.price
                                 )} BYN
                             </td>
                             <td>
                                 {editMode === pattern.id ? (
-                                    <input
-                                        type="text"
-                                        value={editData.description}
-                                        onChange={(e) => handleChange('description', e.target.value)}
-                                    />
+                                        <input
+                                            type="text"
+                                            value={editData.description}
+                                            onChange={(e) => handleChange('description', e.target.value)}
+                                        />
                                 ) : (
                                     pattern.description
                                 )}
                             </td>
                             <td>
-                                {editMode === pattern.id ? (
-                                    <input
-                                        type="file"
-                                        onChange={(e) => handleChange('img', e.target.files[0])}
-                                    />
-                                ) : (
-                                    <img
-                                        src={process.env.REACT_APP_API_URL + '/' + pattern.img}
-                                        alt={pattern.name}
-                                        style={{ maxWidth: '100px', maxHeight: '100px', objectFit: 'cover' }}
-                                    />
-                                )}
+                                {/* Image display is now always static, no file input */}
+                                <img
+                                    src={`${process.env.REACT_APP_API_URL}/${pattern.img}`}
+                                    alt={pattern.name}
+                                    style={{ maxWidth: '100px', maxHeight: '100px', objectFit: 'cover' }}
+                                />
                             </td>
                             <td>
                                 {editMode === pattern.id ? (
-                                    <div style={{display: 'flex', flexDirection: 'row'}}>
-                                        <button style={{paddingRight: '10px'}} className='butt_edit' onClick={() => handleSave(pattern.id)}><img src={check} height={25}/></button>
-                                        <button className='butt_edit' onClick={() => setEditMode(null)}><img src={cross} height={18}/></button>
-                                    </div>
+                                        <div style={{display: 'flex', flexDirection: 'row'}}>
+                                            <button style={{paddingRight: '10px'}} className='butt_edit' onClick={() => handleSave(pattern.id)}><img src={check} height={25}/></button>
+                                            <button className='butt_edit' onClick={() => setEditMode(null)}><img src={cross} height={18}/></button>
+                                        </div>
                                 ) : (
-                                    <button className='butt_edit' onClick={() => handleEdit(pattern)}><img src={pen} height={25}/></button>
+                                        <button className='butt_edit' onClick={() => handleEdit(pattern)}><img src={pen} height={25}/></button>
                                 )}
                             </td>
                             <td className="btn-remove">
@@ -317,9 +309,6 @@ const PatternTable = () => {
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '1.2em' }}>
                     <div></div>
                     Добавить лекало
-                    {/* <div className="image-container">
-                        <img src={kiwi} width={30} alt="Kiwi" />
-                    </div> */}
                 </div>
             </StyledButton>
             

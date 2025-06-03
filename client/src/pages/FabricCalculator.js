@@ -455,7 +455,7 @@ const FabricCalculator = observer(() => {
                                 <p><strong>Размер:</strong> {result.size}</p>
                                 <p><strong>Рост:</strong> {result.height}</p>
                                 <p><strong>Количество:</strong> {result.quantity} шт.</p>
-                                <h5 className="text-center mt-3">Примерный расход ткани: <span style={{ color: '#43d08e' }}>{result.consumption} м</span></h5>
+                                <h5 className="text-center mt-3">Примерный расход ткани (ширина 1,5м): <span style={{ color: '#43d08e' }}>{result.consumption} м</span></h5>
                                 <p className="small text-center mt-2">Расчет является приблизительным и может отличаться в зависимости от особенностей выкройки и ширины ткани.</p>
                             </StyledResultCard>
                         )}

@@ -1,0 +1,24 @@
+{
+  "files": {
+    "main.css": "/kiwearDP/static/css/main.0e6c7d5b.css",
+    "main.js": "/kiwearDP/static/js/main.d9bc4798.js",
+    "static/media/mouse.png": "/kiwearDP/static/media/mouse.8a0c6a99575e2173a9f5.png",
+    "static/media/star-svg.svg": "/kiwearDP/static/media/star-svg.765a4a1f89d664431b33d88336c8680e.svg",
+    "static/media/kiwi-kube-svg.svg": "/kiwearDP/static/media/kiwi-kube-svg.baa4a353441f7b9a4d6cd7ba79212f1e.svg",
+    "static/media/print.svg": "/kiwearDP/static/media/print.f859525c2b826e0ff55b07f6b634d446.svg",
+    "static/media/minus-svg.svg": "/kiwearDP/static/media/minus-svg.0a8cf1bb00bd884d57245e37c52c2c1d.svg",
+    "static/media/pen-svg.svg": "/kiwearDP/static/media/pen-svg.8dccabb29458f05124adb2aebda27faa.svg",
+    "static/media/menu-svg.svg": "/kiwearDP/static/media/menu-svg.3ef4167e10a8699ab408fd199effa857.svg",
+    "static/media/filters-svgrepo-com.svg": "/kiwearDP/static/media/filters-svgrepo-com.8d24cb3d1bd47be5909634e26c2aa8b9.svg",
+    "index.html": "/kiwearDP/index.html",
+    "static/media/kiwi-bird.svg": "/kiwearDP/static/media/kiwi-bird.fed0a7d368c7d300457f9603440d9fdf.svg",
+    "static/media/cross-svg.svg": "/kiwearDP/static/media/cross-svg.e90669cd96d0b41a50a77c1c1cc1b3ba.svg",
+    "static/media/check-svg.svg": "/kiwearDP/static/media/check-svg.dd0c97a9715d2698bc89d4e72f267ad3.svg",
+    "main.0e6c7d5b.css.map": "/kiwearDP/static/css/main.0e6c7d5b.css.map",
+    "main.d9bc4798.js.map": "/kiwearDP/static/js/main.d9bc4798.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.0e6c7d5b.css",
+    "static/js/main.d9bc4798.js"
+  ]
+}
